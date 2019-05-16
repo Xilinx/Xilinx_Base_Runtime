@@ -1,2 +1,1 @@
-# software_shell_deployment
-Software and SHELL deployment solution
+# Software and SHELL deployment docker solution
