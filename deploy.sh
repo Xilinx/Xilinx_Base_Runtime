@@ -34,23 +34,23 @@ done
 if [[ "$PLATFORM" == "alveo-u200" ]]; then
 	if [[ "$VERSION" == "2018.3" ]]; then
 		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-			XRT_PACKAGE = "xrt_201830.2.1.1712_18.04-xrt.deb"
-			SHELL_PACKAGE = "xilinx-u200-xdma-201830.1_18.04.deb"
-			DSA = "xilinx_u200_xdma_201830_1"
-			TIMESTAMP = "1542625200"
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			XRT_PACKAGE="xrt_201830.2.1.1712_18.04-xrt.deb"
+			SHELL_PACKAGE="xilinx-u200-xdma-201830.1_18.04.deb"
+			DSA="xilinx_u200_xdma_201830_1"
+			TIMESTAMP="1542625200"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-			XRT_PACKAGE = "xrt_201830.2.1.1712_16.04-xrt.deb"
-			SHELL_PACKAGE = "xilinx-u200-xdma-201830.1_16.04.deb"
-			DSA = "xilinx_u200_xdma_201830_1"
-			TIMESTAMP = "1542625200"
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
+			SHELL_PACKAGE="xilinx-u200-xdma-201830.1_16.04.deb"
+			DSA="xilinx_u200_xdma_201830_1"
+			TIMESTAMP="1542625200"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		elif [["$OSVERSION" == "centos"]]; then
-			XRT_PACKAGE = "xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
-			SHELL_PACKAGE = "xilinx-u200-xdma-201830.1-2405991.x86_64.rpm"
-			DSA = "xilinx_u200_xdma_201830_1"
-			$TIMESTAMP = "1542625200"
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			XRT_PACKAGE="xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
+			SHELL_PACKAGE="xilinx-u200-xdma-201830.1-2405991.x86_64.rpm"
+			DSA="xilinx_u200_xdma_201830_1"
+			$TIMESTAMP="1542625200"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -63,23 +63,23 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 	if [[ "$VERSION" == "2018.3" ]]; then
 		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-			XRT_PACKAGE = "xrt_201830.2.1.1712_16.04-xrt.deb"
-			SHELL_PACKAGE = "xilinx-u250-xdma-201830.1_18.04.deb"
-			DSA = "xilinx_u250_xdma_201830_1"
-			TIMESTAMP = "1542625200"
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
+			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_18.04.deb"
+			DSA="xilinx_u250_xdma_201830_1"
+			TIMESTAMP="1542625200"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-			XRT_PACKAGE = "xrt_201830.2.1.1712_16.04-xrt.deb"
-			SHELL_PACKAGE = "xilinx-u250-xdma-201830.1_16.04.deb"
-			DSA = "xilinx_u250_xdma_201830_1"
-			TIMESTAMP = "1542625200"
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
+			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_16.04.deb"
+			DSA="xilinx_u250_xdma_201830_1"
+			TIMESTAMP="1542625200"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		elif [["$OSVERSION" == "centos"]]; then
-			XRT_PACKAGE = "xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
-			SHELL_PACKAGE = "xilinx-u250-xdma-201830.1-2405991.x86_64.rpm"
-			DSA = "xilinx_u250_xdma_201830_1"
-			TIMESTAMP = "1542625200"
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			XRT_PACKAGE="xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
+			SHELL_PACKAGE="xilinx-u250-xdma-201830.1-2405991.x86_64.rpm"
+			DSA="xilinx_u250_xdma_201830_1"
+			TIMESTAMP="1542625200"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -94,13 +94,13 @@ else
 	exit 1
 fi
 
-COPY_COMMAND = ""
+COPY_COMMAND=""
 if [[ "$XRT" == 1 ]]; then
-	COPY_COMMAND = "cp /root/$XRT_PACKAGE /tmp;"
+	COPY_COMMAND="cp /root/$XRT_PACKAGE /tmp;"
 fi
 
 if [[ "$SHELL" ==1 ]]; then
-	COPY_COMMAND = "$COPY_COMMAND cp /root/$SHELL_PACKAGE /tmp;"
+	COPY_COMMAND="$COPY_COMMAND cp /root/$SHELL_PACKAGE /tmp;"
 fi
 
 if [ -z "$COPY_COMMAND" ] ; then echo "Please select XRT or Shell or both to install." >&2 ; usage; exit 1 ; fi

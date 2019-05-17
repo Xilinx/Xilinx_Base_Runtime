@@ -30,11 +30,11 @@ done
 if [[ "$PLATFORM" == "alveo-u200" ]]; then
 	if [[ "$VERSION" == "2018.3" ]]; then
 		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-18-04"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-ubuntu-16-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-ubuntu-16-04"
 		elif [["$OSVERSION" == "centos"]]; then
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u200-2018-3-centos"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2018-3-centos"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -47,11 +47,11 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 	if [[ "$VERSION" == "2018.3" ]]; then
 		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u250-2018-3-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2018-3-ubuntu-18-04"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u250-2018-3-ubuntu-16-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2018-3-ubuntu-16-04"
 		elif [["$OSVERSION" == "centos"]]; then
-			DOCKER_IMAGE = "xdock.xilinx.com/runtimedocker:alveo-u250-2018-3-centos"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2018-3-centos"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -69,5 +69,5 @@ fi
 docker run \
 	--rm \
 	--privileged=true \
-	--it $DOCKER_IMAGE \
+	-it $DOCKER_IMAGE \
 	/bin/bash
