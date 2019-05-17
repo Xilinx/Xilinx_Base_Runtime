@@ -38,19 +38,19 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.1_18.04.deb"
 			DSA="xilinx_u200_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.1_16.04.deb"
 			DSA="xilinx_u200_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1604"
 		elif [["$OSVERSION" == "centos"]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.1-2405991.x86_64.rpm"
 			DSA="xilinx_u200_xdma_201830_1"
 			$TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -67,19 +67,19 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_18.04.deb"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_16.04.deb"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1604"
 		elif [["$OSVERSION" == "centos"]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1-2405991.x86_64.rpm"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-18-04"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
 		else
 			echo "Unspport Operating System! "
 			exit 1
