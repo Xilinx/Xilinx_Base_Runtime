@@ -8,4 +8,4 @@ COPY ./xrt_201830.2.1.1712_18.04-xrt.deb /root/
 COPY ./xilinx-u250-xdma-201830.1_18.04.deb /root/
 
 #Install XRT and SHELL
-RUN apt-get update; apt-get install -y /root/rt_201830.2.1.1712_18.04-xrt.deb
+RUN apt-get update; apt-get install -y /root/xrt_201830.2.1.1712_18.04-xrt.deb
