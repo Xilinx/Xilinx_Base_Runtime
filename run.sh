@@ -9,8 +9,8 @@ usage() {
   echo "./run.sh     --platform <platform> --version <version> --os-version <os-version>"
   echo "./deploy.sh   -p        <platform>  -v       <version>  -o          <os-version>"
   echo "<platform> : alveo-u200 / alveo-u250"
-  echo "<version>  : 2018.3 / 2018.2"
-  echo "<os-version>     : ubuntu-18.04 / unbunt-16.04 / centos"
+  echo "<version>  : 2018.3"
+  echo "<os-version>     : ubuntu-18.04 / ubuntu-16.04 / centos"
 
 }
 

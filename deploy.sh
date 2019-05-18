@@ -11,8 +11,8 @@ usage() {
   echo "-x install XRT"
   echo "-s install Shell and flash card"
   echo "<platform> : alveo-u200 / alveo-u250"
-  echo "<version>  : 2018.3 / 2018.2"
-  echo "<os-version>     : ubuntu-18.04 / unbunt-16.04 / centos"
+  echo "<version>  : 2018.3"
+  echo "<os-version>     : ubuntu-18.04 / ubuntu-16.04 / centos"
 
 }
 
@@ -50,7 +50,7 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.1-2405991.x86_64.rpm"
 			DSA="xilinx_u200_xdma_201830_1"
 			$TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-centos"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -67,19 +67,19 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_18.04.deb"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-ubuntu-1804"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_16.04.deb"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1604"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-ubuntu-1604"
 		elif [["$OSVERSION" == "centos"]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1712_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1-2405991.x86_64.rpm"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
-			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-centos"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -114,40 +114,25 @@ docker run --rm  \
 
 if [[ "$XRT" == 1 ]]; then
 	echo "Install XRT"
-	if [[ "$OSVERSION" == 'unbunt-16.04' ]] || [[ "$OSVERSION" == 'unbunt-18.04' ]]; then
+	if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
 		apt-get install /tmp/$XRT_PACKAGE
-	# elif [[ "$OSVERSION" == 'redhat' ]]; then
+	# elif [[ "$OSVERSION" == "redhat" ]]; then
 	# 		yum-config-manager --enable rhel-7-server-optional-rpms
 	# 		yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	elif [[ "$OSVERSION" == 'centos' ]]; then
+	elif [[ "$OSVERSION" == "centos" ]]; then
 			yum install epel-release
-	fi
-	rm /tmp/$XRT_PACKAGE
-fi
-
-if [[ "$XRT" == 1 ]]; then
-	echo "Install XRT"
-	if [[ "$OSVERSION" == 'unbunt-16.04' ]] || [[ "$OSVERSION" == 'unbunt-18.04' ]]; then
-		apt-get install /tmp/$XRT_PACKAGE
-	# elif [[ "$OSVERSION" == 'redhat' ]]; then
-	# 		yum-config-manager --enable rhel-7-server-optional-rpms
-	# 		yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	# 		rpm -i /tmp/$XRT_PACKAGE
-	elif [[ "$OSVERSION" == 'centos' ]]; then
-			yum install epel-release
-			rpm -i /tmp/$XRT_PACKAGE
 	fi
 	rm /tmp/$XRT_PACKAGE
 fi
 
 if [[ "$SHELL" == 1 ]]; then
 	echo "Install Shell"
-	if [[ "$OSVERSION" == 'unbunt-16.04' ]] || [[ "$OSVERSION" == 'unbunt-18.04' ]]; then
+	if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
 		apt-get install /tmp/$SHELL_PACKAGE
-	elif [[ "$OSVERSION" == 'centos' ]]; then
-		rpm -i /tmp/$XRT_PACKAGE
+	elif [[ "$OSVERSION" == "centos" ]]; then
+		rpm -i /tmp/$SHELL_PACKAGE
 	fi
-	rm /tmp/$XRT_PACKAGE
+	rm /tmp/$SHELL_PACKAGE
 	
 	echo "Flash Card"
 	/opt/xilinx/xrt/bin/xbutil flash -a $DSA -t $TIMESTAMP
