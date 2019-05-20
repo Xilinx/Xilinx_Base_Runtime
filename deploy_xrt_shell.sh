@@ -6,10 +6,10 @@
 
 usage() {
   echo "Usage:"
-  echo "./run.sh     --platform <platform> --version <version> --os-version <os-version>"
-  echo "./deploy.sh   -p        <platform>  -v       <version>  -o          <os-version>"
-  echo "<platform> : alveo-u200 / alveo-u250"
-  echo "<version>  : 2018.3 / 2018.2"
+  echo "./deploy_xrt_shell.sh     --platform <platform> --version <version> --os-version <os-version>"
+  echo "./deploy_xrt_shell.sh      -p        <platform>  -v       <version>  -o          <os-version>"
+  echo "<platform>       : alveo-u200 / alveo-u250"
+  echo "<version>        : 2018.3 / 2018.2"
   echo "<os-version>     : ubuntu-18.04 / unbunt-16.04 / centos"
 
 }
@@ -28,4 +28,4 @@ esac
 done
 
 
-./depoy.sh -x -s -p $PLATFORM -v $VERSION -o $OSVERSION
+./deploy.sh -x -s -p $PLATFORM -v $VERSION -o $OSVERSION

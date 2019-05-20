@@ -8,10 +8,10 @@ usage() {
   echo "Usage:"
   echo "./deploy.sh --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>"
   echo "./deploy.sh  -x            -s              -p <platform>         -v       <version>  -o <os-version>"
-  echo "-x install XRT"
-  echo "-s install Shell and flash card"
-  echo "<platform> : alveo-u200 / alveo-u250"
-  echo "<version>  : 2018.3"
+  echo "-x               : install XRT"
+  echo "-s               : install Shell and flash card"
+  echo "<platform>       : alveo-u200 / alveo-u250"
+  echo "<version>        : 2018.3"
   echo "<os-version>     : ubuntu-18.04 / ubuntu-16.04 / centos"
 
 }
