@@ -63,7 +63,7 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 	if [[ "$VERSION" == "2018.3" ]]; then
 		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-			XRT_PACKAGE="xrt_201830.2.1.1712_16.04-xrt.deb"
+			XRT_PACKAGE="xrt_201830.2.1.1712_18.04-xrt.deb"
 			SHELL_PACKAGE="xilinx-u250-xdma-201830.1_18.04.deb"
 			DSA="xilinx_u250_xdma_201830_1"
 			TIMESTAMP="1542625200"
@@ -99,7 +99,7 @@ if [[ "$XRT" == 1 ]]; then
 	COPY_COMMAND="cp /root/$XRT_PACKAGE /tmp;"
 fi
 
-if [[ "$SHELL" ==1 ]]; then
+if [[ "$SHELL" == 1 ]]; then
 	COPY_COMMAND="$COPY_COMMAND cp /root/$SHELL_PACKAGE /tmp;"
 fi
 
