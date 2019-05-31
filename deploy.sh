@@ -107,7 +107,6 @@ if [ -z "$COPY_COMMAND" ] ; then echo "Please select XRT or Shell or both to ins
 
 echo "Copy XRT and Shell from docker container. "
 docker run --rm  \
-	--privileged=true \
 	-v /tmp:/tmp  \
 	-it   $DOCKER_IMAGE \
 	/bin/bash -c "$COPY_COMMAND"
