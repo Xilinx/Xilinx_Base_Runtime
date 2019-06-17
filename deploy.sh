@@ -114,12 +114,12 @@ docker run --rm  \
 if [[ "$XRT" == 1 ]]; then
 	echo "Install XRT"
 	if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		apt-get install /tmp/$XRT_PACKAGE
+		sudo apt-get install /tmp/$XRT_PACKAGE
 	# elif [[ "$OSVERSION" == "redhat" ]]; then
 	# 		yum-config-manager --enable rhel-7-server-optional-rpms
 	# 		yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	elif [[ "$OSVERSION" == "centos" ]]; then
-			yum install epel-release
+		sudo yum install epel-release
 	fi
 	rm /tmp/$XRT_PACKAGE
 fi
@@ -134,5 +134,5 @@ if [[ "$SHELL" == 1 ]]; then
 	rm /tmp/$SHELL_PACKAGE
 	
 	echo "Flash Card"
-	/opt/xilinx/xrt/bin/xbutil flash -a $DSA -t $TIMESTAMP
+	sudo /opt/xilinx/xrt/bin/xbutil flash -a $DSA -t $TIMESTAMP
 fi
