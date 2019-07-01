@@ -5,4 +5,4 @@
 #!/usr/bin/env bash
 
 cd Dockerfiles
-for path in $(dirname "$(find . -name build.sh )")  ; do cd $path; build.sh; cd -; done
+for path in $(find . -name build.sh )  ; do cd $(dirname "$path"); ./build.sh; cd -; done
