@@ -14,6 +14,8 @@ usage() {
 
 }
 
+COMMAND="/bin/bash"
+
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
 while true
@@ -22,6 +24,7 @@ case "$1" in
 	-p|--platform        ) PLATFORM="$2"     ; shift 2 ;;
 	-v|--version         ) VERSION="$2"      ; shift 2 ;;
 	-o|--os-version      ) OSVERSION="$2"    ; shift 2 ;;
+	-c                   ) COMMAND="$2"      ; shift 2 ;;
 	-h|--help            ) usage             ; exit  1 ;;
 *) break ;;
 esac
@@ -69,5 +72,8 @@ fi
 docker run \
 	--rm \
 	--privileged=true \
-	-it $DOCKER_IMAGE \
-	/bin/bash
+	-it \
+	$DOCKER_IMAGE \
+	/bin/bash -c \
+	"$COMMAND"
+

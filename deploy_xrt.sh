@@ -27,5 +27,5 @@ case "$1" in
 esac
 done
 
-
+echo "Install $VERSION XRT on $OSVERSION"
 ./deploy.sh -x -p $PLATFORM -v $VERSION -o $OSVERSION

@@ -127,9 +127,9 @@ fi
 if [[ "$SHELL" == 1 ]]; then
 	echo "Install Shell"
 	if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		apt-get install /tmp/$SHELL_PACKAGE
+		sudo apt-get install /tmp/$SHELL_PACKAGE
 	elif [[ "$OSVERSION" == "centos" ]]; then
-		rpm -i /tmp/$SHELL_PACKAGE
+		sudo rpm -i /tmp/$SHELL_PACKAGE
 	fi
 	rm /tmp/$SHELL_PACKAGE
 	
