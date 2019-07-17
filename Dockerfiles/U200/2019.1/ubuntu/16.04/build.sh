@@ -4,7 +4,7 @@
 #
 #!/usr/bin/env bash
 
-TAG="xdock:5000/xsds:alveo-u200-20189-1-ubuntu-1604"
+TAG="xdock:5000/xsds:alveo-u200-2019-1-ubuntu-1604"
 
 while true
 do
