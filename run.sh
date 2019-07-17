@@ -8,8 +8,8 @@ usage() {
   echo "Usage:"
   echo "./run.sh     --platform <platform> --version <version> --os-version <os-version>"
   echo "./run.sh      -p        <platform>  -v       <version>  -o          <os-version>"
-  echo "<platform>     : alveo-u200 / alveo-u250"
-  echo "<version>      : 2018.3"
+  echo "<platform>     : alveo-u200 / alveo-u250 / alveo-u280"
+  echo "<version>      : 2018.3 / 2019.1"
   echo "<os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos"
 
 }

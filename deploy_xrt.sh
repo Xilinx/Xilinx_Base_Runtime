@@ -8,8 +8,8 @@ usage() {
   echo "Usage:"
   echo "./deploy_xrt.sh     --platform <platform> --version <version> --os-version <os-version>"
   echo "./deploy_xrt.sh      -p        <platform>  -v       <version>  -o          <os-version>"
-  echo "<platform>       : alveo-u200 / alveo-u250"
-  echo "<version>        : 2018.3 / 2018.2"
+  echo "<platform>       : alveo-u200 / alveo-u250 / alveo-u280"
+  echo "<version>        : 2018.3 / 2019.1"
   echo "<os-version>     : ubuntu-18.04 / unbunt-16.04 / centos"
 
 }
