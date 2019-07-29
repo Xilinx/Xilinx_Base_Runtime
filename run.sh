@@ -36,8 +36,19 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1604"
-		elif [["$OSVERSION" == "centos"]]; then
+		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-centos"
+		else
+			echo "Unspport Operating System! "
+			exit 1
+		fi
+	elif [[ "$VERSION" == "2019.1" ]]; then
+		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-ubuntu-1804"
+		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-ubuntu-1604"
+		elif [[ "$OSVERSION" == "centos" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-centos"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -53,8 +64,19 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-ubuntu-1804"
 		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-ubuntu-1604"
-		elif [["$OSVERSION" == "centos"]]; then
+		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-centos"
+		else
+			echo "Unspport Operating System! "
+			exit 1
+		fi
+	elif [[ "$VERSION" == "2019.1" ]]; then
+		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-ubuntu-1804"
+		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-ubuntu-1604"
+		elif [[ "$OSVERSION" == "centos" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-centos"
 		else
 			echo "Unspport Operating System! "
 			exit 1
@@ -64,10 +86,25 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 		echo "Unspport version! "
 		exit 1
 	fi
+elif [[ "$PLATFORM" == "alveo-u280" ]]; then
+	if [[ "$VERSION" == "2019.1" ]]; then
+		if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-ubuntu-1804"
+		elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-ubuntu-1604"
+		elif [[ "$OSVERSION" == "centos" ]]; then
+			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-centos"
+		else
+			echo "Unspport Operating System! "
+			exit 1
+		fi
 else
 	echo "Unspport platform! "
 	exit 1
 fi
+
+echo "Pull docker image"
+docker pull $DOCKER_IMAGE
 
 docker run \
 	--rm \

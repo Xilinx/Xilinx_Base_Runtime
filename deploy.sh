@@ -177,6 +177,9 @@ fi
 
 if [ -z "$COPY_COMMAND" ] ; then echo "Please select XRT or Shell or both to install." >&2 ; usage; exit 1 ; fi
 
+echo "Pull docker image"
+docker pull $DOCKER_IMAGE
+
 echo "Copy XRT and Shell from docker container. "
 docker run --rm  \
 	-v /tmp:/tmp  \
@@ -193,7 +196,7 @@ if [[ "$XRT" == 1 ]]; then
 	elif [[ "$OSVERSION" == "centos" ]]; then
 		sudo yum install epel-release
 	fi
-	rm /tmp/$XRT_PACKAGE
+	sudo rm /tmp/$XRT_PACKAGE
 fi
 
 if [[ "$SHELL" == 1 ]]; then
@@ -203,7 +206,7 @@ if [[ "$SHELL" == 1 ]]; then
 	elif [[ "$OSVERSION" == "centos" ]]; then
 		sudo rpm -i /tmp/$SHELL_PACKAGE
 	fi
-	rm /tmp/$SHELL_PACKAGE
+	sudo rm /tmp/$SHELL_PACKAGE
 	
 	echo "Flash Card"
 	sudo /opt/xilinx/xrt/bin/xbutil flash -a $DSA -t $TIMESTAMP
