@@ -98,6 +98,7 @@ elif [[ "$PLATFORM" == "alveo-u280" ]]; then
 			echo "Unspport Operating System! "
 			exit 1
 		fi
+	fi
 else
 	echo "Unspport platform! "
 	exit 1
