@@ -49,7 +49,7 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1794_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015.x86_64.rpm"
 			DSA="xilinx_u200_xdma_201830_2"
-			$TIMESTAMP="-t 1561465320"
+			TIMESTAMP="-t 1561465320"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-centos"
 		else
 			echo "Unspport Operating System! "
@@ -72,7 +72,7 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			XRT_PACKAGE="xrt_201910.2.2.2173_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015.x86_64.rpm"
 			DSA="xilinx_u200_xdma_201830_2"
-			$TIMESTAMP="-t 1561465320"
+			TIMESTAMP="-t 1561465320"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-centos"
 		else
 			echo "Unspport Operating System! "
