@@ -45,14 +45,15 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			DSA="xilinx_u200_xdma_201830_2"
 			TIMESTAMP="-t 1561465320"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1604"
-		elif [["$OSVERSION" == "centos"]]; then
+		elif [[ "$OSVERSION" == "centos" ]]; then
 			XRT_PACKAGE="xrt_201830.2.1.1794_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015.x86_64.rpm"
 			DSA="xilinx_u200_xdma_201830_2"
 			TIMESTAMP="-t 1561465320"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	elif [[ "$VERSION" == "2019.1" ]]; then
@@ -68,18 +69,20 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 			DSA="xilinx_u200_xdma_201830_2"
 			TIMESTAMP="-t 1561465320"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-ubuntu-1604"
-		elif [["$OSVERSION" == "centos"]]; then
+		elif [[ "$OSVERSION" == "centos" ]]; then
 			XRT_PACKAGE="xrt_201910.2.2.2173_7.4.1708-xrt.rpm"
 			SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015.x86_64.rpm"
 			DSA="xilinx_u200_xdma_201830_2"
 			TIMESTAMP="-t 1561465320"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	else
-		echo "Unspport version! "
+		echo "Unsupported version! "
+		usage
 		exit 1
 	fi
 elif [[ "$PLATFORM" == "alveo-u250" ]]; then
@@ -103,7 +106,8 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 			TIMESTAMP="-t 1561656294"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	elif [[ "$VERSION" == "2019.1" ]]; then
@@ -126,11 +130,13 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 			TIMESTAMP="-t 1561656294"
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	else
-		echo "Unspport version! "
+		echo "Unsupported version! "
+		usage
 		exit 1
 	fi
 elif [[ "$PLATFORM" == "alveo-u280" ]]; then
@@ -154,15 +160,18 @@ elif [[ "$PLATFORM" == "alveo-u280" ]]; then
 			TIMESTAMP=""
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	else
-		echo "Unspport version! "
+		echo "Unsupported version! "
+		usage
 		exit 1
 	fi
 else
-	echo "Unspport platform! "
+	echo "Unsupported platform! "
+	usage
 	exit 1
 fi
 
@@ -209,5 +218,5 @@ if [[ "$SHELL" == 1 ]]; then
 	sudo rm /tmp/$SHELL_PACKAGE
 	
 	echo "Flash Card"
-	sudo /opt/xilinx/xrt/bin/xbutil flash -a $DSA -t $TIMESTAMP
+	sudo /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP
 fi

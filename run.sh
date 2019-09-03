@@ -39,7 +39,8 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	elif [[ "$VERSION" == "2019.1" ]]; then
@@ -50,12 +51,14 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	# elif [[ "$VERSION" == "2018.2" ]]; then
 	else
-		echo "Unspport version! "
+		echo "Unsupported version! "
+		usage
 		exit 1
 	fi
 elif [[ "$PLATFORM" == "alveo-u250" ]]; then
@@ -67,7 +70,8 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	elif [[ "$VERSION" == "2019.1" ]]; then
@@ -78,12 +82,14 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	# elif [[ "$VERSION" == "2018.2" ]]; then
 	else
-		echo "Unspport version! "
+		echo "Unsupported version! "
+		usage
 		exit 1
 	fi
 elif [[ "$PLATFORM" == "alveo-u280" ]]; then
@@ -95,12 +101,14 @@ elif [[ "$PLATFORM" == "alveo-u280" ]]; then
 		elif [[ "$OSVERSION" == "centos" ]]; then
 			DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-centos"
 		else
-			echo "Unspport Operating System! "
+			echo "Unsupported Operating System! "
+			usage
 			exit 1
 		fi
 	fi
 else
-	echo "Unspport platform! "
+	echo "Unsupported platform! "
+	usage
 	exit 1
 fi
 
