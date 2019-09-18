@@ -18,6 +18,11 @@ usage() {
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 while true
 do
 case "$1" in
@@ -198,25 +203,26 @@ docker run --rm  \
 if [[ "$XRT" == 1 ]]; then
 	echo "Install XRT"
 	if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		sudo apt-get install /tmp/$XRT_PACKAGE
+		apt-get install /tmp/$XRT_PACKAGE
 	# elif [[ "$OSVERSION" == "redhat" ]]; then
 	# 		yum-config-manager --enable rhel-7-server-optional-rpms
 	# 		yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	elif [[ "$OSVERSION" == "centos" ]]; then
-		sudo yum install epel-release
+		yum install epel-release
+		yum install /tmp/$XRT_PACKAGE
 	fi
-	sudo rm /tmp/$XRT_PACKAGE
+	rm /tmp/$XRT_PACKAGE
 fi
 
 if [[ "$SHELL" == 1 ]]; then
 	echo "Install Shell"
 	if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		sudo apt-get install /tmp/$SHELL_PACKAGE
+		apt-get install /tmp/$SHELL_PACKAGE
 	elif [[ "$OSVERSION" == "centos" ]]; then
-		sudo rpm -i /tmp/$SHELL_PACKAGE
+		rpm -i /tmp/$SHELL_PACKAGE
 	fi
-	sudo rm /tmp/$SHELL_PACKAGE
+	rm /tmp/$SHELL_PACKAGE
 	
 	echo "Flash Card"
-	sudo /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP
+	/opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP
 fi
