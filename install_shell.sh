@@ -6,8 +6,8 @@
 
 usage() {
   echo "Usage:"
-  echo "./deploy_shell.sh     --platform <platform> --version <version> --os-version <os-version>"
-  echo "./deploy_shell.sh      -p        <platform>  -v       <version>  -o          <os-version>"
+  echo "./install_shell.sh     --platform <platform> --version <version> --os-version <os-version>"
+  echo "./install_shell.sh      -p        <platform>  -v       <version>  -o          <os-version>"
   echo "<platform>       : alveo-u200 / alveo-u250 / alveo-u280"
   echo "<version>        : 2018.3 / 2019.1"
   echo "<os-version>     : ubuntu-18.04 / unbunt-16.04 / centos"
@@ -29,4 +29,4 @@ done
 
 echo "Install $VERSION $PLATFORM Shell on $OSVERSION"
 
-./deploy.sh -s -p $PLATFORM -v $VERSION -o $OSVERSION
+./install.sh -s -p $PLATFORM -v $VERSION -o $OSVERSION

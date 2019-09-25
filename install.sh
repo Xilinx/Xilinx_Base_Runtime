@@ -6,8 +6,8 @@
 
 usage() {
   echo "Usage:"
-  echo "./deploy.sh --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>"
-  echo "./deploy.sh  -x            -s              -p <platform>         -v       <version>  -o <os-version>"
+  echo "./install.sh --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>"
+  echo "./install.sh  -x            -s              -p <platform>         -v       <version>  -o <os-version>"
   echo "-x               : install XRT"
   echo "-s               : install Shell and flash card"
   echo "<platform>       : alveo-u200 / alveo-u250 / alveo-u280"
