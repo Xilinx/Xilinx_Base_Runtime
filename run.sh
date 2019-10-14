@@ -5,13 +5,40 @@
 #!/usr/bin/env bash
 
 usage() {
-  echo "Usage:"
-  echo "./run.sh     --platform <platform> --version <version> --os-version <os-version>"
-  echo "./run.sh      -p        <platform>  -v       <version>  -o          <os-version>"
-  echo "<platform>     : alveo-u200 / alveo-u250 / alveo-u280"
-  echo "<version>      : 2018.3 / 2019.1"
-  echo "<os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos"
+    echo "Running run.sh to start a docker container for XRT runtime. "
+    echo ""
+    echo "Usage:"
+    echo "./run.sh     --platform <platform> --version <version> --os-version <os-version>"
+    echo "./run.sh      -p        <platform>  -v       <version>  -o          <os-version>"
+    echo "<platform>     : alveo-u200 / alveo-u250 / alveo-u280"
+    echo "<version>      : 2018.3 / 2019.1"
+    echo "<os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos"
+    echo ""
+    echo "Example:"
+    echo "Start docker container whith 2019.1 XRT for Alveo U200 Shell on Ubuntu 18.04"
+    echo "  ./run.sh -p alveo-u200 -v 2019.1 -o ubuntu-18.04"
 
+}
+
+list() {
+    echo "Available Docker Images:"
+    echo ""
+    echo "Image Name                          Platform         Version      OS Version"
+    echo "alveo-u200-201830-centos            Alveo U200       2018.3       CentOS"
+    echo "alveo-u200-201830-ubuntu-1604       Alveo U200       2018.3       Ubuntu 16.04"
+    echo "alveo-u200-201830-ubuntu-1804       Alveo U200       2018.3       Ubuntu 18.04"
+    echo "alveo-u200-2019-1-centos            Alveo U200       2019.1       CentOS"
+    echo "alveo-u200-2019-1-ubuntu-1604       Alveo U200       2019.1       Ubuntu 16.04"
+    echo "alveo-u200-2019-1-ubuntu-1804       Alveo U200       2019.1       Ubuntu 18.04"
+    echo "alveo-u250-201830-centos            Alveo U250       2018.3       CentOS"
+    echo "alveo-u250-201830-ubuntu-1604       Alveo U250       2018.3       Ubuntu 16.04"
+    echo "alveo-u250-201830-ubuntu-1804       Alveo U250       2018.3       Ubuntu 18.04"
+    echo "alveo-u250-2019-1-centos            Alveo U250       2019.1       CentOS"
+    echo "alveo-u250-2019-1-ubuntu-1604       Alveo U250       2019.1       Ubuntu 16.04"
+    echo "alveo-u250-2019-1-ubuntu-1804       Alveo U250       2019.1       Ubuntu 18.04"
+    echo "alveo-u280-2019-1-centos            Alveo U280       2019.1       CentOS"
+    echo "alveo-u280-2019-1-ubuntu-1604       Alveo U280       2019.1       Ubuntu 16.04"
+    echo "alveo-u280-2019-1-ubuntu-1804       Alveo U280       2019.1       Ubuntu 18.04"
 }
 
 COMMAND="/bin/bash"
@@ -41,6 +68,8 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 		else
 			echo "Unsupported Operating System! "
 			usage
+			echo ""
+			list
 			exit 1
 		fi
 	elif [[ "$VERSION" == "2019.1" ]]; then
@@ -53,12 +82,16 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
 		else
 			echo "Unsupported Operating System! "
 			usage
+			echo ""
+			list
 			exit 1
 		fi
 	# elif [[ "$VERSION" == "2018.2" ]]; then
 	else
 		echo "Unsupported version! "
 		usage
+		echo ""
+		list
 		exit 1
 	fi
 elif [[ "$PLATFORM" == "alveo-u250" ]]; then
@@ -72,6 +105,8 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 		else
 			echo "Unsupported Operating System! "
 			usage
+			echo ""
+			list
 			exit 1
 		fi
 	elif [[ "$VERSION" == "2019.1" ]]; then
@@ -84,12 +119,16 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
 		else
 			echo "Unsupported Operating System! "
 			usage
+			echo ""
+			list
 			exit 1
 		fi
 	# elif [[ "$VERSION" == "2018.2" ]]; then
 	else
 		echo "Unsupported version! "
 		usage
+		echo ""
+		list
 		exit 1
 	fi
 elif [[ "$PLATFORM" == "alveo-u280" ]]; then
@@ -103,12 +142,16 @@ elif [[ "$PLATFORM" == "alveo-u280" ]]; then
 		else
 			echo "Unsupported Operating System! "
 			usage
+			echo ""
+			list
 			exit 1
 		fi
 	fi
 else
 	echo "Unsupported platform! "
 	usage
+	echo ""
+	list
 	exit 1
 fi
 
