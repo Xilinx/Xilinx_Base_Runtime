@@ -49,8 +49,8 @@ root@machine:~$ cd software_shell_deployment
 4. Acoording to demand choosing depolyment shell with corresponding arguments: platform, xrt version and os version
    With --install-xrt and --install-shell to choose install XRT or Shell. You can install both together. But at leat choose one option. 
 ```
-#  ./deploy.sh     --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>
-#  ./deploy.sh     -x              -s            -p        <platform>  -v       <version>  -o          <os-version>
+#  ./install.sh     --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>
+#  ./install.sh     -x              -s             -p        <platform>  -v       <version>  -o          <os-version>
 #  <platform>     : alveo-u200 / alveo-u250 / alveo-u280
 #  <version>      : 2018.3 / 2019.1
 #  <os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos
