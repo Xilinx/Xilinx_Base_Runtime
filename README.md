@@ -26,6 +26,7 @@ alveo-u280-2019-1-ubuntu-1804 | Alveo U280 | 2019.1 | Ubuntu 18.04
 
 Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Inside container, you can have an isolated runtime evniorment with pre-installed XRT(Xilinx Runtime) and dependencies. 
 > However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See **`Install XRT and Shell`**. 
+
 ![Runtime](doc/runtime.png)
 
 ### Runtime Example
