@@ -98,7 +98,6 @@ All the docker images provided by this project can be used as base images for bu
 ```
 # Choose one of images as base image based on platform, version and OS version
 FROM xilinx/xsds:alveo-u280-2019-1-ubuntu-1804
-<<<<<<< HEAD
 
 # Configure enviroment what your application needs, for example
 apt-get install [dependencies]
