@@ -26,6 +26,7 @@ alveo-u280-2019-1-ubuntu-1804 | Alveo U280 | 2019.1 | Ubuntu 18.04
 
 Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Inside container, you can have an isolated runtime evniorment with pre-installed XRT(Xilinx Runtime) and dependencies. 
 > However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See **`Install XRT and Shell`**. 
+
 ![Runtime](doc/runtime.png)
 
 ### Runtime Example
@@ -60,6 +61,7 @@ root@fc33db3f6ed6:/$ /opt/xilinx/xrt/bin/xbutil dmatest
 This project can help you to install XRT and Shell on your host with these unified docker images. You do NOT need to worry about mis-match XRT and Shell and installing XRT and flashing card with one command by using install.sh and providing three parameters: platform, version and OS version. Besides, you can decide to install XRT only or flash Shell only or both together. But at least one option and please be aware that XRT should be installed before installing Shell. 
 
 The figure shows how installing XRT and Shell is been done. With the specified platform, version and OS version, we can copy correspoding XRT and Shell installation packages from docker container to host /tmp directory. 
+
 ![Install XRT and Shell](doc/install_xrt_shell.png)
 
 ### Installation Example
@@ -91,9 +93,18 @@ root@machine:~$ ./deploy_xrt_shell.sh -p alveo-u200 -v 2019.1 -o ubuntu-18.04
 5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine to load the new image on FPGA.
 
 ## Base Docker Images
-All the docker images provided by this project can be used as base images for building your own docker applications because they all have XRT and dependencies installed. Here is an simple example how to create Dockerfile to build.
+All the docker images provided by this project can be used as base images for building your own docker applications because they all have XRT and dependencies installed. Here is an simple example of Dockerfile.
 
 ```
 # Choose one of images as base image based on platform, version and OS version
 FROM xilinx/xsds:alveo-u280-2019-1-ubuntu-1804
+
+# Configure enviroment what your application needs, for example
+apt-get install [dependencies]
+
+# Copy your application and xclbin files
+COPY [application_file] [path_of_application_file]
+COPY [xclbin_file] [path_of_xclbin_file]
 ```
+
+Then you can use `docker build -f [Dockerfile]` to build your own docker application. 
