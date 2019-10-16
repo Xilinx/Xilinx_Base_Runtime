@@ -1,6 +1,13 @@
 # Software and SHELL deployment docker solution
 ## Description
-This project provides unified docker images for several purposes: isolated runtime evniroment, installing XRT and Shell on host and as a base image for docker application. For more docker information, please refer [Docker Documentation](https://docs.docker.com). 
+This project provides unified docker images for several purposes: 
+
+* [Isolated Runtime Enviorment](#isolated-runtime-enviorment)
+* [Install XRT and Shell on host](#install-xrt-and-shell)
+* [As base image for docker application](#base-docker-images)
+
+For more docker information, please refer [Docker Documentation](https://docs.docker.com). 
+
 ## Available Docker Images
 ![Docker Images](doc/docker_images.png)
 
@@ -22,10 +29,10 @@ alveo-u280-2019-1-centos      | Alveo U280 | 2019.1 | CentOS
 alveo-u280-2019-1-ubuntu-1604 | Alveo U280 | 2019.1 | Ubuntu 16.04
 alveo-u280-2019-1-ubuntu-1804 | Alveo U280 | 2019.1 | Ubuntu 18.04
 
-## Isolated Runtime Evniroment
+## Isolated Runtime Enviorment
 
-Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Inside container, you can have an isolated runtime evniorment with pre-installed XRT(Xilinx Runtime) and dependencies. 
-> However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See **`Install XRT and Shell`**. 
+Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Inside container, you can have an isolated runtime enviorment with pre-installed XRT(Xilinx Runtime) and dependencies. 
+> However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See [**`Install XRT and Shell`**](#install-xrt-and-shell). 
 
 ![Runtime](doc/runtime.png)
 
@@ -58,9 +65,12 @@ root@fc33db3f6ed6:/$ /opt/xilinx/xrt/bin/xbutil dmatest
 
 ## Install XRT and Shell
 
-This project can help you to install XRT and Shell on your host with these unified docker images. You do NOT need to worry about mis-match XRT and Shell and installing XRT and flashing card with one command by using install.sh and providing three parameters: platform, version and OS version. Besides, you can decide to install XRT only or flash Shell only or both together. But at least one option and please be aware that XRT should be installed before installing Shell. 
+This project will help to install XRT and Shell on the host machine with the above unified docker images. A single command (install.sh) with three parameters: platform, XRT and OS version can be used to install the XRT, Shell as well as Flash the card.  Besides, you can even decide whether to install XRT only/flash card only/do both. 
 
-The figure shows how installing XRT and Shell is been done. With the specified platform, version and OS version, we can copy correspoding XRT and Shell installation packages from docker container to host /tmp directory. 
+> Note: XRT should be installed before installing Shell.
+ 
+
+The figure shows how installing XRT and Shell is been done. With the specified platform, version and OS version, the project copies correspoding XRT and Shell installation packages from docker container to host /tmp directory. Then it installs XRT and Shell and flashes the card automatically.  
 
 ![Install XRT and Shell](doc/install_xrt_shell.png)
 
@@ -79,8 +89,10 @@ root@machine:~$ git clone https://github.com/Xilinx/software_shell_deployment.gi
 root@machine:~$ cd software_shell_deployment
 ```
 
-4. Acoording to demand choosing depolyment shell with corresponding arguments: platform, xrt version and os version
-   With --install-xrt and --install-shell to choose install XRT or Shell. You can install both together. But at leat choose one option. 
+4. .  According to demand, choose deployment shell with corresponding parameters: platform, XRT version and OS version. At least one of the two parameters listed below maybe specified:
+  * --install-xrt (-x)    is the parameter for XRT installation option
+  * --install-shell (-s)  is the parameter for Shell installation option
+
 ```
 #  ./install.sh     --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>
 #  ./install.sh     -x              -s             -p        <platform>  -v       <version>  -o          <os-version>
