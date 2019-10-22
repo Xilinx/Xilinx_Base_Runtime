@@ -8,42 +8,41 @@ usage() {
     echo "Running run.sh to start a docker container for XRT runtime. "
     echo ""
     echo "Usage:"
-    echo "./run.sh     --platform <platform> --version <version> --os-version <os-version>"
-    echo "./run.sh      -p        <platform>  -v       <version>  -o          <os-version>"
-    echo "<platform>     : alveo-u200 / alveo-u250 / alveo-u280"
+    echo "./run.sh      --version <version> --os-version <os-version>"
+    echo "./run.sh       -v       <version>  -o          <os-version>"
     echo "<version>      : 2018.3 / 2019.1"
     echo "<os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos"
     echo ""
     echo "Example:"
-    echo "Start docker container whith 2019.1 XRT for Alveo U200 Shell on Ubuntu 18.04"
-    echo "  ./run.sh -p alveo-u200 -v 2019.1 -o ubuntu-18.04"
+    echo "Start docker container whith 2019.1 XRT on Ubuntu 18.04"
+    echo "  ./run.sh -v 2019.1 -o ubuntu-18.04"
 
 }
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
 list() {
     echo "Available Docker Images:"
     echo ""
-    echo "Image Name                          Platform         Version      OS Version"
-    echo "alveo-u200-201830-centos            Alveo U200       2018.3       CentOS"
-    echo "alveo-u200-201830-ubuntu-1604       Alveo U200       2018.3       Ubuntu 16.04"
-    echo "alveo-u200-201830-ubuntu-1804       Alveo U200       2018.3       Ubuntu 18.04"
-    echo "alveo-u200-2019-1-centos            Alveo U200       2019.1       CentOS"
-    echo "alveo-u200-2019-1-ubuntu-1604       Alveo U200       2019.1       Ubuntu 16.04"
-    echo "alveo-u200-2019-1-ubuntu-1804       Alveo U200       2019.1       Ubuntu 18.04"
-    echo "alveo-u250-201830-centos            Alveo U250       2018.3       CentOS"
-    echo "alveo-u250-201830-ubuntu-1604       Alveo U250       2018.3       Ubuntu 16.04"
-    echo "alveo-u250-201830-ubuntu-1804       Alveo U250       2018.3       Ubuntu 18.04"
-    echo "alveo-u250-2019-1-centos            Alveo U250       2019.1       CentOS"
-    echo "alveo-u250-2019-1-ubuntu-1604       Alveo U250       2019.1       Ubuntu 16.04"
-    echo "alveo-u250-2019-1-ubuntu-1804       Alveo U250       2019.1       Ubuntu 18.04"
-    echo "alveo-u280-2019-1-centos            Alveo U280       2019.1       CentOS"
-    echo "alveo-u280-2019-1-ubuntu-1604       Alveo U280       2019.1       Ubuntu 16.04"
-    echo "alveo-u280-2019-1-ubuntu-1804       Alveo U280       2019.1       Ubuntu 18.04"
+    echo "Image Name                     Support Platform              Version      OS Version"
+    echo "alveo-2018-3-centos            Alveo U200 / U250             2018.3       CentOS"
+    echo "alveo-2018-3-ubuntu-1604       Alveo U200 / U250             2018.3       Ubuntu 16.04"
+    echo "alveo-2018-3-ubuntu-1804       Alveo U200 / U250             2018.3       Ubuntu 18.04"
+    echo "alveo-2019-1-centos            Alveo U200 / U250 / U280      2019.1       CentOS"
+    echo "alveo-2019-1-ubuntu-1604       Alveo U200 / U250 / U280      2019.1       Ubuntu 16.04"
+    echo "alveo-2019-1-ubuntu-1804       Alveo U200 / U250 / U280      2019.1       Ubuntu 18.04"
 }
 
 COMMAND="/bin/bash"
 
-if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
+
+/opt/xilinx/xrt/bin/xbutil list > /dev/null
+if [ $? != 0 ] ; then
+	echo "Please check XRT is installed and Shell is flashed on FPGA. "
+	echo "You can use host_setup.sh to install and flash. "
+	exit 1
+fi
+
 
 while true
 do
