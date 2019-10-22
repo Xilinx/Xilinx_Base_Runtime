@@ -24,22 +24,13 @@ usage() {
 list() {
     echo "Available Docker Images:"
     echo ""
-    echo "Image Name                          Platform         Version      OS Version"
-    echo "alveo-u200-201830-centos            Alveo U200       2018.3       CentOS"
-    echo "alveo-u200-201830-ubuntu-1604       Alveo U200       2018.3       Ubuntu 16.04"
-    echo "alveo-u200-201830-ubuntu-1804       Alveo U200       2018.3       Ubuntu 18.04"
-    echo "alveo-u200-2019-1-centos            Alveo U200       2019.1       CentOS"
-    echo "alveo-u200-2019-1-ubuntu-1604       Alveo U200       2019.1       Ubuntu 16.04"
-    echo "alveo-u200-2019-1-ubuntu-1804       Alveo U200       2019.1       Ubuntu 18.04"
-    echo "alveo-u250-201830-centos            Alveo U250       2018.3       CentOS"
-    echo "alveo-u250-201830-ubuntu-1604       Alveo U250       2018.3       Ubuntu 16.04"
-    echo "alveo-u250-201830-ubuntu-1804       Alveo U250       2018.3       Ubuntu 18.04"
-    echo "alveo-u250-2019-1-centos            Alveo U250       2019.1       CentOS"
-    echo "alveo-u250-2019-1-ubuntu-1604       Alveo U250       2019.1       Ubuntu 16.04"
-    echo "alveo-u250-2019-1-ubuntu-1804       Alveo U250       2019.1       Ubuntu 18.04"
-    echo "alveo-u280-2019-1-centos            Alveo U280       2019.1       CentOS"
-    echo "alveo-u280-2019-1-ubuntu-1604       Alveo U280       2019.1       Ubuntu 16.04"
-    echo "alveo-u280-2019-1-ubuntu-1804       Alveo U280       2019.1       Ubuntu 18.04"
+    echo "Image Name                     Support Platform              Version      OS Version"
+    echo "alveo-2018-3-centos            Alveo U200 / U250             2018.3       CentOS"
+    echo "alveo-2018-3-ubuntu-1604       Alveo U200 / U250             2018.3       Ubuntu 16.04"
+    echo "alveo-2018-3-ubuntu-1804       Alveo U200 / U250             2018.3       Ubuntu 18.04"
+    echo "alveo-2019-1-centos            Alveo U200 / U250 / U280      2019.1       CentOS"
+    echo "alveo-2019-1-ubuntu-1604       Alveo U200 / U250 / U280      2019.1       Ubuntu 16.04"
+    echo "alveo-2019-1-ubuntu-1804       Alveo U200 / U250 / U280      2019.1       Ubuntu 18.04"
 }
 
 
@@ -81,19 +72,16 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
             SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015_18.04.deb"
             DSA="xilinx_u200_xdma_201830_2"
             TIMESTAMP="-t 1561465320"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1804"
         elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
             XRT_PACKAGE="xrt_201830.2.1.1794_16.04-xrt.deb"
             SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015_16.04.deb"
             DSA="xilinx_u200_xdma_201830_2"
             TIMESTAMP="-t 1561465320"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-ubuntu-1604"
         elif [[ "$OSVERSION" == "centos" ]]; then
             XRT_PACKAGE="xrt_201830.2.1.1794_7.4.1708-xrt.rpm"
             SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015.x86_64.rpm"
             DSA="xilinx_u200_xdma_201830_2"
             TIMESTAMP="-t 1561465320"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-201830-centos"
         else
             echo "Unsupported Operating System! "
             usage
@@ -107,19 +95,16 @@ if [[ "$PLATFORM" == "alveo-u200" ]]; then
             SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015_18.04.deb"
             DSA="xilinx_u200_xdma_201830_2"
             TIMESTAMP="-t 1561465320"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-ubuntu-1804"
         elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
             XRT_PACKAGE="xrt_201910.2.2.2250_16.04-xrt.deb"
             SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015_16.04.deb"
             DSA="xilinx_u200_xdma_201830_2"
             TIMESTAMP="-t 1561465320"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-ubuntu-1604"
         elif [[ "$OSVERSION" == "centos" ]]; then
             XRT_PACKAGE="xrt_201910.2.2.2250_7.4.1708-xrt.rpm"
             SHELL_PACKAGE="xilinx-u200-xdma-201830.2-2580015.x86_64.rpm"
             DSA="xilinx_u200_xdma_201830_2"
             TIMESTAMP="-t 1561465320"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u200-2019-1-centos"
         else
             echo "Unsupported Operating System! "
             usage
@@ -141,19 +126,16 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
             SHELL_PACKAGE="xilinx-u250-xdma-201830.2-2580015_18.04.deb"
             DSA="xilinx_u250_xdma_201830_2"
             TIMESTAMP="-t 1561656294"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-ubuntu-1804"
         elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
             XRT_PACKAGE="xrt_201830.2.1.1794_16.04-xrt.deb"
             SHELL_PACKAGE="xilinx-u250-xdma-201830.2-2580015_16.04.deb"
             DSA="xilinx_u250_xdma_201830_2"
             TIMESTAMP="-t 1561656294"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-ubuntu-1604"
         elif [["$OSVERSION" == "centos"]]; then
             XRT_PACKAGE="xrt_201830.2.1.1794_7.4.1708-xrt.rpm"
             SHELL_PACKAGE="xilinx-u250-xdma-201830.2-2580015.x86_64.rpm"
             DSA="xilinx_u250_xdma_201830_2"
             TIMESTAMP="-t 1561656294"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-201830-centos"
         else
             echo "Unsupported Operating System! "
             usage
@@ -167,19 +149,16 @@ elif [[ "$PLATFORM" == "alveo-u250" ]]; then
             SHELL_PACKAGE="xilinx-u250-xdma-201830.2-2580015_18.04.deb"
             DSA="xilinx_u250_xdma_201830_2"
             TIMESTAMP="-t 1561656294"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-ubuntu-1804"
         elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
             XRT_PACKAGE="xrt_201910.2.2.2250_16.04-xrt.deb"
             SHELL_PACKAGE="xilinx-u250-xdma-201830.2-2580015_16.04.deb"
             DSA="xilinx_u250_xdma_201830_2"
             TIMESTAMP="-t 1561656294"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-ubuntu-1604"
         elif [["$OSVERSION" == "centos"]]; then
             XRT_PACKAGE="xrt_201910.2.2.2250_7.4.1708-xrt.rpm"
             SHELL_PACKAGE="xilinx-u250-xdma-201830.2-2580015.x86_64.rpm"
             DSA="xilinx_u250_xdma_201830_2"
             TIMESTAMP="-t 1561656294"
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u250-2019-1-centos"
         else
             echo "Unsupported Operating System! "
             usage
@@ -201,19 +180,16 @@ elif [[ "$PLATFORM" == "alveo-u280" ]]; then
             SHELL_PACKAGE="xilinx-u280-xdma-201910.1-2579327_18.04.deb"
             DSA="xilinx_u280_xdma_201910_1"
             TIMESTAMP=""
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-ubuntu-1804"
         elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
             XRT_PACKAGE="xrt_201910.2.2.2250_16.04-xrt.deb"
             SHELL_PACKAGE="xilinx-u280-xdma-201910.1-2579327_16.04.deb"
             DSA="xilinx_u280_xdma_201910_1"
             TIMESTAMP=""
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-ubuntu-1604"
         elif [["$OSVERSION" == "centos"]]; then
             XRT_PACKAGE="xrt_201910.2.2.2250_7.4.1708-xrt.rpm"
             SHELL_PACKAGE="xilinx-u280-xdma-201910.1-2579327.x86_64.rpm"
             DSA="xilinx_u280_xdma_201910_1"
             TIMESTAMP=""
-            DOCKER_IMAGE="xdock.xilinx.com/xsds:alveo-u280-2019-1-centos"
         else
             echo "Unsupported Operating System! "
             usage

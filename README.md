@@ -24,21 +24,12 @@ For running docker containers of FPGA applications, there are several preconditi
 
 Docker Images | Platform | Version | OS Version
 ------------- | -------- | ------- | ----------
-alveo-u200-201830-centos      | Alveo U200 | 2018.3 | CentOS
-alveo-u200-201830-ubuntu-1604 | Alveo U200 | 2018.3 | Ubuntu 16.04
-alveo-u200-201830-ubuntu-1804 | Alveo U200 | 2018.3 | Ubuntu 18.04
-alveo-u200-2019-1-centos      | Alveo U200 | 2019.1 | CentOS
-alveo-u200-2019-1-ubuntu-1604 | Alveo U200 | 2019.1 | Ubuntu 16.04
-alveo-u200-2019-1-ubuntu-1804 | Alveo U200 | 2019.1 | Ubuntu 18.04
-alveo-u250-201830-centos      | Alveo U250 | 2018.3 | CentOS
-alveo-u250-201830-ubuntu-1604 | Alveo U250 | 2018.3 | Ubuntu 16.04
-alveo-u250-201830-ubuntu-1804 | Alveo U250 | 2018.3 | Ubuntu 18.04
-alveo-u250-2019-1-centos      | Alveo U250 | 2019.1 | CentOS
-alveo-u250-2019-1-ubuntu-1604 | Alveo U250 | 2019.1 | Ubuntu 16.04
-alveo-u250-2019-1-ubuntu-1804 | Alveo U250 | 2019.1 | Ubuntu 18.04
-alveo-u280-2019-1-centos      | Alveo U280 | 2019.1 | CentOS
-alveo-u280-2019-1-ubuntu-1604 | Alveo U280 | 2019.1 | Ubuntu 16.04
-alveo-u280-2019-1-ubuntu-1804 | Alveo U280 | 2019.1 | Ubuntu 18.04
+alveo-2018-3-centos      | Alveo U200 / U250 | 2018.3 | CentOS
+alveo-2018-3-ubuntu-1604 | Alveo U200 / U250 | 2018.3 | Ubuntu 16.04
+alveo-2018-3-ubuntu-1804 | Alveo U200 / U250 | 2018.3 | Ubuntu 18.04
+alveo-2019-1-centos      | Alveo U200 / U250 / U280 | 2019.1 | CentOS
+alveo-2019-1-ubuntu-1604 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 16.04
+alveo-2019-1-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
 
 ## Setup Host
 
