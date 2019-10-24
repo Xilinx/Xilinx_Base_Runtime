@@ -57,11 +57,11 @@ done
 
 if [[ "$VERSION" == "2018.3" ]]; then
 	if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-201830-ubuntu-1804"
+		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2018-3-ubuntu-1804"
 	elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-201830-ubuntu-1604"
+		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2018-3-ubuntu-1604"
 	elif [[ "$OSVERSION" == "centos" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-201830-centos"
+		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2018-3-centos"
 	else
 		echo "Unsupported Operating System! "
 		usage
