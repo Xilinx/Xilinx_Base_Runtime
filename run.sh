@@ -38,7 +38,9 @@ COMMAND="/bin/bash"
 
 /opt/xilinx/xrt/bin/xbutil list > /dev/null
 if [ $? != 0 ] ; then
-	echo "Please check XRT is installed and Shell is flashed on FPGA. "
+	echo "Please check XRT is installed and Shell is flashed on FPGA. See:"
+	echo "/opt/xilinx/xrt/bin/xbutil list"
+	echo ""
 	echo "You can use host_setup.sh to install and flash. "
 	exit 1
 fi
