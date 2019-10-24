@@ -79,11 +79,10 @@ if [ $? != 0 ] ; then
         apt-get install -y wget
     elif [[ "$OSVERSION" == "centos" ]]; then
         yum install -y wget
+    fi
 fi
 
-
-if [ "$XRT" == 0 &&  "$SHELL" == 1] ; then echo "Please select XRT or Shell or both to install." >&2 ; usage; exit 1 ; fi
-
+if [ "$XRT" == 0 &&  "$SHELL" == 0] ; then echo "Please do NOT skip both XRT installation and card flashing." >&2 ; usage; exit 1 ; fi
 
 if [[ "$XRT" == 1 ]]; then
     echo "Download XRT installation package"
@@ -117,3 +116,4 @@ if [[ "$SHELL" == 1 ]]; then
     echo "Flash Card"
     /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP
 fi
+
