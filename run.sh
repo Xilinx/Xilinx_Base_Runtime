@@ -94,12 +94,26 @@ else
 	exit 1
 fi
 
+# Mapping XRT user function and management function
+DEVICES=""
+for xclf in /dev/xclmgmt*
+do
+	DEVICES="$DEVICES --device=$xclf:$xclf"
+done
+for usrf in /dev/dri/renderD*
+do
+	DEVICES="$DEVICES --device=$usrf:$usrf"
+done
+
 echo "Pull docker image"
 docker pull $DOCKER_IMAGE
 
+
+echo "Run docker as:"
+echo "docker run --rm $DEVICES -it $DOCKER_IMAGE /bin/bash -c $COMMAND"
 docker run \
 	--rm \
-	--privileged=true \
+	$DEVICES \
 	-it \
 	$DOCKER_IMAGE \
 	/bin/bash -c \
