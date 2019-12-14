@@ -120,7 +120,7 @@ Then you can use `docker build -f [Dockerfile]` to build your own docker applica
 ## FAQ
 1. Why shuold I install XRT on host if XRT is already installed inside container?
 > XRT contains multiple things: driver, runtime, utilities and etc. Docker container cannot access host kernel directely. Therefore, XRT inside container is runtime, and XRT on host talks to kernel as driver. 
-> For now, XRT dose NOT support backward. You need make sure the versions of both host XRT and contanier XRT should be same. 
+> For now, XRT does NOT support backward. You need make sure the versions of both host XRT and contanier XRT should be same. 
 
 2. I don't want to run docker in privileged mode. How can I map management function and user function as devices?
 > You can use docker run `--device` flag. The path of management function is `/dev/xclmgm[num_mgmt]` and the path of user function is `/dev/dri/renderD[num_user]`. 
@@ -133,6 +133,6 @@ Then you can use `docker build -f [Dockerfile]` to build your own docker applica
 > After find out `num_mgmt` and `num_user`, you can run docker like:
 > `docker run --rm -it --device=/dev/xclmgmt769:/dev/xclmgmt769 --device=/dev/dri/renderD128:/dev/dri/renderD128 xilinx/xsds:alveo-u200-2019-1-ubuntu-1604`
 
-3. What dose OS version mean for docker images?
+3. What does OS version mean for docker images?
 > Docker can provide OS-level virtualization. You can run CentOS based docker container on Ubuntu server. It provides convience for customers build their applications without considering different OS versions. 
 
