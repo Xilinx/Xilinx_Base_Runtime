@@ -33,7 +33,7 @@ alveo-2019-1-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
 
 ## Setup Host
 
-This project will help to install XRT and Shell on the host machine with the above unified docker images. A single command (install.sh) with two parameters: platform and version can be used to install the XRT, Shell as well as Flash the card.
+This project will help to install XRT and Shell on the host machine with the above unified docker images. A single command (host_setup.sh) with two parameters: platform and version can be used to install the XRT, Shell as well as Flash the card.
 
 The figure shows how installing XRT and Shell is been done. With the specified platform and version, the project copies correspoding XRT and Shell installation packages from [Xilinx lounge page](https://www.xilinx.com/products/boards-and-kits/alveo.html). Then it installs XRT and Shell and flashes the card automatically.  
 
@@ -54,12 +54,11 @@ root@machine:~$ cd software_shell_deployment
 
 4. According to demand, choose deployment shell with corresponding parameters: platform and version.
 ```
-#  ./install.sh     --install-xrt --install-shell --platform <platform> --version <version> --os-version <os-version>
-#  ./install.sh     -x              -s             -p        <platform>  -v       <version>  -o          <os-version>
+#  ./host_setup.sh     --install-xrt --install-shell --platform <platform> --version <version>
+#  ./host_setup.sh     -x              -s             -p        <platform>  -v       <version>
 #  <platform>     : alveo-u200 / alveo-u250 / alveo-u280
 #  <version>      : 2018.3 / 2019.1
-#  <os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos
-root@machine:~$ ./deploy_xrt_shell.sh -p alveo-u200 -v 2019.1 -o ubuntu-18.04
+root@machine:~$ ./host_setup.sh -p alveo-u200 -v 2019.1 
 ```
 
 5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine to load the new image on FPGA.
