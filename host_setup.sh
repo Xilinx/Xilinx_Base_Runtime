@@ -11,13 +11,13 @@ usage() {
     echo "  ./host_setup.sh --platform <platform> --version <version>"
     echo "  ./host_setup.sh  -p <platform>         -v       <version>"
     echo "  <platform>       : alveo-u200 / alveo-u250 / alveo-u280"
-    echo "  <version>        : 2018.3 / 2019.1"
+    echo "  <version>        : 2018.3 / 2019.1 / 2019.2"
     echo "  --skip-xrt-install    : skip install XRT"
     echo "  --skip-shell-flash    : skip flash Shell"
     echo ""
     echo "Example:"
-    echo "Install 2019.1 XRT for Alveo U200 and flash Shell "
-    echo "  ./install.sh -p alveo-u200 -v 2019.1"
+    echo "Install 2019.2 XRT for Alveo U200 and flash Shell "
+    echo "  ./install.sh -p alveo-u200 -v 2019.2"
 
 }
 
@@ -31,6 +31,9 @@ list() {
     echo "alveo-2019-1-centos            Alveo U200 / U250 / U280      2019.1       CentOS"
     echo "alveo-2019-1-ubuntu-1604       Alveo U200 / U250 / U280      2019.1       Ubuntu 16.04"
     echo "alveo-2019-1-ubuntu-1804       Alveo U200 / U250 / U280      2019.1       Ubuntu 18.04"
+    echo "alveo-2019-2-centos            Alveo U200 / U250 / U280      2019.2       CentOS"
+    echo "alveo-2019-2-ubuntu-1604       Alveo U200 / U250 / U280      2019.2       Ubuntu 16.04"
+    echo "alveo-2019-2-ubuntu-1804       Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
 }
 
 
@@ -71,6 +74,11 @@ if grep -q $COMB "conf/spec.txt"; then
     SHELL_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $2}' | awk -F= '{print $2}'`
     DSA=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $3}' | awk -F= '{print $2}'`
     TIMESTAMP=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $4}' | awk -F= '{print $2}'`
+else
+    usage
+    echo ""
+    list
+    exit 1
 fi
 
 wget --help > /dev/null

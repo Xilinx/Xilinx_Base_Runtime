@@ -10,12 +10,12 @@ usage() {
     echo "Usage:"
     echo "./run.sh      --version <version> --os-version <os-version>"
     echo "./run.sh       -v       <version>  -o          <os-version>"
-    echo "<version>      : 2018.3 / 2019.1"
+    echo "<version>      : 2018.3 / 2019.1 / 2019.2"
     echo "<os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos"
     echo ""
     echo "Example:"
-    echo "Start docker container whith 2019.1 XRT on Ubuntu 18.04"
-    echo "  ./run.sh -v 2019.1 -o ubuntu-18.04"
+    echo "Start docker container whith 2019.2 XRT on Ubuntu 18.04"
+    echo "  ./run.sh -v 2019.2 -o ubuntu-18.04"
 
 }
 
@@ -31,10 +31,13 @@ list() {
     echo "alveo-2019-1-centos            Alveo U200 / U250 / U280      2019.1       CentOS"
     echo "alveo-2019-1-ubuntu-1604       Alveo U200 / U250 / U280      2019.1       Ubuntu 16.04"
     echo "alveo-2019-1-ubuntu-1804       Alveo U200 / U250 / U280      2019.1       Ubuntu 18.04"
+    echo "alveo-2019-2-centos            Alveo U200 / U250 / U280      2019.2       CentOS"
+    echo "alveo-2019-2-ubuntu-1604       Alveo U200 / U250 / U280      2019.2       Ubuntu 16.04"
+    echo "alveo-2019-2-ubuntu-1804       Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
 }
 
 COMMAND="/bin/bash"
-
+PLATFORM="alveo-u200"
 
 /opt/xilinx/xrt/bin/xbutil list > /dev/null
 if [ $? != 0 ] ; then
@@ -57,41 +60,16 @@ case "$1" in
 esac
 done
 
-if [[ "$VERSION" == "2018.3" ]]; then
-	if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2018-3-ubuntu-1804"
-	elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2018-3-ubuntu-1604"
-	elif [[ "$OSVERSION" == "centos" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2018-3-centos"
-	else
-		echo "Unsupported Operating System! "
-		usage
-		echo ""
-		list
-		exit 1
-	fi
-elif [[ "$VERSION" == "2019.1" ]]; then
-	if [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2019-1-ubuntu-1804"
-	elif [[ "$OSVERSION" == "ubuntu-16.04" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2019-1-ubuntu-1604"
-	elif [[ "$OSVERSION" == "centos" ]]; then
-		DOCKER_IMAGE="xilinx/xilinx_runtime_base:alveo-2019-1-centos"
-	else
-		echo "Unsupported Operating System! "
-		usage
-		echo ""
-		list
-		exit 1
-	fi
-# elif [[ "$VERSION" == "2018.2" ]]; then
+
+COMB="${PLATFORM}_${VERSION}_${OSVERSION}"
+
+if grep -q $COMB "conf/spec.txt"; then
+    DOCKER_IMAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $5}' | awk -F= '{print $2}'`
 else
-	echo "Unsupported version! "
-	usage
-	echo ""
-	list
-	exit 1
+    usage
+    echo ""
+    list
+    exit 1
 fi
 
 # Mapping XRT user function and management function
@@ -105,6 +83,7 @@ do
 	DEVICES="$DEVICES --device=$usrf:$usrf"
 done
 
+#Update docker image
 echo "Pull docker image"
 docker pull $DOCKER_IMAGE
 
