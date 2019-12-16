@@ -64,13 +64,15 @@ done
 COMB="${PLATFORM}_${VERSION}_${OSVERSION}"
 
 if grep -q $COMB "conf/spec.txt"; then
-    DOCKER_IMAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $5}' | awk -F= '{print $2}'`
+    IMAGE_TAG=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $5}' | awk -F= '{print $2}'`
 else
     usage
     echo ""
     list
     exit 1
 fi
+
+DOCKER_IMAGE="xilinx/xilinx_runtime_base:$IMAGE_TAG"
 
 # Mapping XRT user function and management function
 DEVICES=""

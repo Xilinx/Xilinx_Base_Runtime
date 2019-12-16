@@ -30,6 +30,9 @@ alveo-2018-3-ubuntu-1804 | Alveo U200 / U250 | 2018.3 | Ubuntu 18.04
 alveo-2019-1-centos      | Alveo U200 / U250 / U280 | 2019.1 | CentOS
 alveo-2019-1-ubuntu-1604 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 16.04
 alveo-2019-1-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
+alveo-2019-2-centos      | Alveo U200 / U250 / U280 | 2019.2 | CentOS
+alveo-2019-2-ubuntu-1604 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 16.04
+alveo-2019-2-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 18.04
 
 ## Setup Host
 
@@ -57,7 +60,7 @@ root@machine:~$ cd software_shell_deployment
 #  ./host_setup.sh     --install-xrt --install-shell --platform <platform> --version <version>
 #  ./host_setup.sh     -x              -s             -p        <platform>  -v       <version>
 #  <platform>     : alveo-u200 / alveo-u250 / alveo-u280
-#  <version>      : 2018.3 / 2019.1
+#  <version>      : 2018.3 / 2019.1 / 2019.2
 root@machine:~$ ./host_setup.sh -p alveo-u200 -v 2019.1 
 ```
 
@@ -85,8 +88,7 @@ user@machine:~$ cd software_shell_deployment
 ```
 #  ./run.sh     --platform <platform> --version <version> --os-version <os-version>
 #  ./run.sh      -p        <platform>  -v       <version>  -o          <os-version>
-#  <platform>     : alveo-u200 / alveo-u250 / alveo-u280
-#  <version>      : 2018.3 / 2019.1
+#  <version>      : 2018.3 / 2019.1 / 2019.2
 #  <os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos
 user@machine:~/software_shell_deployment$ ./run.sh -p alveo-u200 -v 2019.1 -o ubuntu-18.04
 ```
