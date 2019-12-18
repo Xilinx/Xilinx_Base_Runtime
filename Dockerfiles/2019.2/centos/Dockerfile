@@ -8,3 +8,6 @@ RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_20192
 
 #Install XRT 
 RUN rpm -i /root/xrt_201920.2.3.1301_7.4.1708-xrt.rpm
+
+#Copy notice and disclaimer
+ADD Xilinx_notice_and_disclaimer.txt /Xilinx_notice_and_disclaimer.txt

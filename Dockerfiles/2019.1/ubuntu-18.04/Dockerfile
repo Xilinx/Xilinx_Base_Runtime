@@ -8,3 +8,6 @@ RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_20191
 
 #Install XRT
 RUN apt-get update; apt-get install -y /root/xrt_201910.2.2.2250_18.04-xrt.deb
+
+#Copy notice and disclaimer
+ADD Xilinx_notice_and_disclaimer.txt /Xilinx_notice_and_disclaimer.txt

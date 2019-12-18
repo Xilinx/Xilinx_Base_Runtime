@@ -36,7 +36,7 @@ list() {
     echo "alveo-2019-2-ubuntu-1804       Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
 }
 
-COMMAND="/bin/bash"
+COMMAND="cat /Xilinx_notice_and_disclaimer.txt;"
 PLATFORM="alveo-u200"
 
 /opt/xilinx/xrt/bin/xbutil list > /dev/null
@@ -54,7 +54,7 @@ do
 case "$1" in
 	-v|--version         ) VERSION="$2"      ; shift 2 ;;
 	-o|--os-version      ) OSVERSION="$2"    ; shift 2 ;;
-	-c                   ) COMMAND="$2"      ; shift 2 ;;
+	-c                   ) COMMAND="$COMMAND;$2"      ; shift 2 ;;
 	-h|--help            ) usage             ; exit  1 ;;
 *) break ;;
 esac
