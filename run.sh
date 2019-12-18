@@ -36,7 +36,7 @@ list() {
     echo "alveo-2019-2-ubuntu-1804       Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
 }
 
-COMMAND="cat /Xilinx_notice_and_disclaimer.txt;"
+COMMAND="cat /Xilinx_notice_and_disclaimer.txt; /bin/bash;"
 PLATFORM="alveo-u200"
 
 /opt/xilinx/xrt/bin/xbutil list > /dev/null
@@ -91,7 +91,7 @@ docker pull $DOCKER_IMAGE
 
 
 echo "Run docker as:"
-echo "docker run --rm $DEVICES -it $DOCKER_IMAGE /bin/bash -c $COMMAND"
+echo "docker run --rm $DEVICES -it $DOCKER_IMAGE"
 docker run \
 	--rm \
 	$DEVICES \
