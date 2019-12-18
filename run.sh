@@ -19,7 +19,6 @@ usage() {
 
 }
 
-if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
 list() {
     echo "Available Docker Images:"
@@ -36,7 +35,27 @@ list() {
     echo "alveo-2019-2-ubuntu-1804       Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
 }
 
-COMMAND="cat /Xilinx_notice_and_disclaimer.txt; /bin/bash;"
+notice_disclaimer() {
+    cat doc/notice_disclaimer.txt
+}
+
+confirm() {
+    # call with a prompt string or use a default
+    read -r -p "${1:-Are you sure you wish to proceed? [y/n]:} " response
+    case "$response" in
+        [yY][eE][sS]|[yY]) 
+            true
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
+}
+
+notice_disclaimer
+confirm 
+
+COMMAND="/bin/bash"
 PLATFORM="alveo-u200"
 
 /opt/xilinx/xrt/bin/xbutil list > /dev/null
@@ -54,11 +73,13 @@ do
 case "$1" in
 	-v|--version         ) VERSION="$2"      ; shift 2 ;;
 	-o|--os-version      ) OSVERSION="$2"    ; shift 2 ;;
-	-c                   ) COMMAND="$COMMAND;$2"      ; shift 2 ;;
+	-c                   ) COMMAND="$2"      ; shift 2 ;;
 	-h|--help            ) usage             ; exit  1 ;;
 *) break ;;
 esac
 done
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
 
 COMB="${PLATFORM}_${VERSION}_${OSVERSION}"

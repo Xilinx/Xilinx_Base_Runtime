@@ -45,6 +45,26 @@ fi
 XRT=1
 SHELL=1
 
+notice_disclaimer() {
+    cat doc/notice_disclaimer.txt
+}
+
+confirm() {
+    # call with a prompt string or use a default
+    read -r -p "${1:-Are you sure you wish to proceed? [y/n]:} " response
+    case "$response" in
+        [yY][eE][sS]|[yY]) 
+            true
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
+}
+
+notice_disclaimer
+confirm 
+
 while true
 do
 case "$1" in
