@@ -16,6 +16,10 @@ usage() {
     echo "Example:"
     echo "Start docker container whith 2019.2 XRT on Ubuntu 18.04"
     echo "  ./run.sh -v 2019.2 -o ubuntu-18.04"
+    echo ""
+    echo "Additional parameters: "
+    echo "-c [command] : Execute specific command when start docker container"
+    echo "--pull       : Pull docker image before run to update "
 
 }
 
@@ -57,6 +61,7 @@ confirm
 
 COMMAND="/bin/bash"
 PLATFORM="alveo-u200"
+UPDATE=0
 
 /opt/xilinx/xrt/bin/xbutil list > /dev/null
 if [ $? != 0 ] ; then
@@ -74,6 +79,7 @@ case "$1" in
 	-v|--version         ) VERSION="$2"      ; shift 2 ;;
 	-o|--os-version      ) OSVERSION="$2"    ; shift 2 ;;
 	-c                   ) COMMAND="$2"      ; shift 2 ;;
+	--pull               ) UPDATE=1          ; shift 1 ;;
 	-h|--help            ) usage             ; exit  1 ;;
 *) break ;;
 esac
@@ -106,9 +112,11 @@ do
 	DEVICES="$DEVICES --device=$usrf:$usrf"
 done
 
-#Update docker image
-echo "Pull docker image"
-docker pull $DOCKER_IMAGE
+if [[ "$UPDATE" == 1 ]]; then
+	#Update docker image
+	echo "Pull docker image: $DOCKER_IMAGE"
+	docker pull $DOCKER_IMAGE
+fi
 
 
 echo "Run docker as:"
