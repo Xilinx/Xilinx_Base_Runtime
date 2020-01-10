@@ -1,10 +1,10 @@
-# Software and SHELL deployment docker solution
+# Xilinx Runtime Base Image Deployment Docker Solution
 
 This project provides unified docker images for several purposes: 
 
 * [Setup Host](#setup-host)
-* [Isolated Runtime Environment](#isolated-runtime-environment)
-* [As base image for docker application](#base-docker-images)
+* [Run Base Docker Image](#run-base-docker-image)
+* [Build docker application by using base image](#build-docker-application-by-using-base-image)
 
 ## Background
 
@@ -36,7 +36,7 @@ alveo-2019-2-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 18.04
 
 ## Setup Host
 
-This project will help to install XRT and Shell on the host machine with the above unified docker images. A single command (host_setup.sh) with two parameters: platform and version can be used to install the XRT, Shell as well as Flash the card.
+This project will help to install XRT and Shell on the host machine. A single command (host_setup.sh) with two parameters: platform and version can be used to install the XRT, Shell as well as Flash the card.
 
 The figure shows how installing XRT and Shell is been done. With the specified platform and version, the project copies corresponding XRT and Shell installation packages from [Xilinx lounge page](https://www.xilinx.com/products/boards-and-kits/alveo.html). Then it installs XRT and Shell and flashes the card automatically.  
 
@@ -64,10 +64,10 @@ root@machine:~$ cd software_shell_deployment
 root@machine:~$ ./host_setup.sh -p alveo-u200 -v 2019.1 
 ```
 
-5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine to load the new image on FPGA.
+5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine after installation completed to load the new image on FPGA.
 
 
-## Isolated Runtime Environment
+## Run Base Docker Image
 
 Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Inside container, you can have an isolated runtime environment with pre-installed XRT(Xilinx Runtime) and dependencies. 
 > However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See [**Setup Host**](#setup-host). 
@@ -90,7 +90,7 @@ user@machine:~$ cd software_shell_deployment
 #  ./run.sh      -v       <version>  -o          <os-version>
 #  <version>      : 2018.3 / 2019.1 / 2019.2
 #  <os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos
-user@machine:~/software_shell_deployment$ ./run.sh -p alveo-u200 -v 2019.1 -o ubuntu-18.04
+user@machine:~/software_shell_deployment$ ./run.sh -v 2019.1 -o ubuntu-18.04
 ```
 
 4. Inside docker container, run `xbutil list` or `xbutil dmatest` for listing cards or testing dma. Or copy your own application and xclbin files to container and run for test. 
@@ -101,7 +101,7 @@ root@fc33db3f6ed6:/$ /opt/xilinx/xrt/bin/xbutil dmatest
 ```
 
 
-## Base Docker Images
+## Build docker application by using base image
 All the docker images provided by this project can be used as base images for building your own docker applications because they all have XRT and dependencies installed. Here is an simple example of Dockerfile.
 
 ```
@@ -116,14 +116,14 @@ COPY [application_file] [path_of_application_file]
 COPY [xclbin_file] [path_of_xclbin_file]
 ```
 
-Then you can use `docker build -f [Dockerfile]` to build your own docker application. 
+Then you can use `docker build -t [tag] -f [Dockerfile]` to build your own docker application. 
 
 ## FAQ
 1. Why should I install XRT on host if XRT is already installed inside container?
 > XRT contains multiple things: driver, runtime, utilities and etc. Docker container cannot access host kernel directly. Therefore, XRT inside container is runtime, and XRT on host talks to kernel as driver. 
 > For now, XRT does NOT support backward. You need make sure the versions of both host XRT and container XRT should be same. 
 
-2. I don't want to run docker in privileged mode. How can I map management function and user function as devices?
+2. I don't want to run docker in privileged mode. How can I map management function and user function as devices to docker container?
 > You can use docker run `--device` flag. The path of management function is `/dev/xclmgm[num_mgmt]` and the path of user function is `/dev/dri/renderD[num_user]`. 
 > For `num_mgmt`, run `/opt/xilinx/xrt/bin/xbmgmt scan`, you will see something like:
 > `[0]mgmt:[03:00.1]:0x5000:0x000e:[xclmgmt:2.2.2173,ff6624c6d72c6ca68d6b123c9d76e49e55c09097:769]`
@@ -136,6 +136,9 @@ Then you can use `docker build -f [Dockerfile]` to build your own docker applica
 
 3. What does OS version mean for docker images?
 > Docker can provide OS-level virtualization. You can run CentOS based docker container on Ubuntu server. It provides convenience for customers build their applications without considering different OS versions. 
+
+4. If I have installed mutilple FPGA cards on host, which cards would be accessable in docker container?
+> All of them. run.sh script will scan all FPGA devices and map them to docker container. If you want limit specific cards, please refer question #2. Please be aware, mapping device does NOT mean exclusive for the container. 
 
 ## Notice and Disclaimer
 NOTICE: This software is made available to you in the form of a Docker image (the “Image”).  By using this Image, you agree on behalf of yourself and your employer (if applicable) to be bound by this information and the license agreements applicable to the software distributed inside this Image and (if applicable) the software that is not distributed inside this Image but is needed to run the Image and which is downloaded from the internet upon execution of the Docker build utility script made available to you (the “Script”).  Should you elect to execute the Script by entering the necessary commands, you acknowledge that various software will be downloaded, either from the Image or from the internet, and installed in the Image, and you agree that you are solely responsible for reviewing and abiding by the terms of the license agreements governing such software downloaded by the Docker executable and installed into the Image.  The software license agreements are available for your review either in the “LICENSE” file at the Image download site, or in the source code of the software distributed in the Image, or in the case of either (i) operating system software, at the URL provided to you for the main community open source project web page, and (ii) software downloaded from the internet, at the URL provided to you for the original web page where such software is made available for download.  If you do not agree, then you should not “click” accept the notice nor enter the Script command nor otherwise access, download, install or use the Image.  
