@@ -43,7 +43,7 @@ The figure shows how installing XRT and Shell is been done. With the specified p
 ![Install XRT and Shell](doc/install_xrt_shell.png)
 
 ### Installation Example
-1. Deployment script must be run as root
+1. Run host_setup.sh as root. 
 
 2. Clone repository from Xilinx GitHub
 ```
@@ -84,7 +84,7 @@ user@machine:~$ git clone https://github.com/Xilinx/software_shell_deployment.gi
 user@machine:~$ cd software_shell_deployment
 ```
 
-3. Run run.sh with corresponding arguments: platform, xrt version and os version
+3. Run run.sh with corresponding arguments: xrt version and os version
 ```
 #  ./run.sh     --version <version> --os-version <os-version>
 #  ./run.sh      -v       <version>  -o          <os-version>
