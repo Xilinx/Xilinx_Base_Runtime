@@ -8,7 +8,7 @@ This project provides unified docker images for several purposes:
 
 ## Background
 
-Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one package. For more docker information, please refer [Docker Documentation](https://docs.docker.com). 
+Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver Xilinx_Base_Runtimeed containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one package. For more docker information, please refer [Docker Documentation](https://docs.docker.com). 
 
 ![Runtime](doc/runtime.png)
 
@@ -24,15 +24,15 @@ For running docker containers of FPGA applications, there are several preconditi
 
 Docker Images | Platform | Version | OS Version
 ------------- | -------- | ------- | ----------
-alveo-2018-3-centos      | Alveo U200 / U250 | 2018.3 | CentOS
-alveo-2018-3-ubuntu-1604 | Alveo U200 / U250 | 2018.3 | Ubuntu 16.04
-alveo-2018-3-ubuntu-1804 | Alveo U200 / U250 | 2018.3 | Ubuntu 18.04
-alveo-2019-1-centos      | Alveo U200 / U250 / U280 | 2019.1 | CentOS
-alveo-2019-1-ubuntu-1604 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 16.04
-alveo-2019-1-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
-alveo-2019-2-centos      | Alveo U200 / U250 / U280 | 2019.2 | CentOS
-alveo-2019-2-ubuntu-1604 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 16.04
-alveo-2019-2-ubuntu-1804 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 18.04
+alveo-2018.3-centos      | Alveo U200 / U250 | 2018.3 | CentOS
+alveo-2018.3-ubuntu-16.04 | Alveo U200 / U250 | 2018.3 | Ubuntu 16.04
+alveo-2018.3-ubuntu-18.04 | Alveo U200 / U250 | 2018.3 | Ubuntu 18.04
+alveo-2019.1-centos      | Alveo U200 / U250 / U280 | 2019.1 | CentOS
+alveo-2019.1-ubuntu-16.04 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 16.04
+alveo-2019.1-ubuntu-18.04 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
+alveo-2019.2-centos      | Alveo U200 / U250 / U280 | 2019.2 | CentOS
+alveo-2019.2-ubuntu-16.04 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 16.04
+alveo-2019.2-ubuntu-18.04 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 18.04
 
 ## Setup Host
 
@@ -47,12 +47,12 @@ The figure shows how installing XRT and Shell is been done. With the specified p
 
 2. Clone repository from Xilinx GitHub
 ```
-root@machine:~$ git clone https://github.com/Xilinx/software_shell_deployment.git
+root@machine:~$ git clone https://github.com/Xilinx/Xilinx_Base_Runtime.git
 ```
 
-3. Go to software_shell_deployment directory
+3. Go to Xilinx_Base_Runtime directory
 ```
-root@machine:~$ cd software_shell_deployment
+root@machine:~$ cd Xilinx_Base_Runtime
 ```
 
 4. According to demand, choose deployment shell with corresponding parameters: platform and version.
@@ -69,7 +69,7 @@ root@machine:~$ ./host_setup.sh -p alveo-u200 -v 2019.1
 
 ## Run Base Docker Image
 
-Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver software in packages called containers. Inside container, you can have an isolated runtime environment with pre-installed XRT(Xilinx Runtime) and dependencies. 
+Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver Xilinx_Base_Runtimeed containers. Inside container, you can have an isolated runtime environment with pre-installed XRT(Xilinx Runtime) and dependencies. 
 > However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See [**Setup Host**](#setup-host). 
 
 ![Runtime](doc/runtime.png)
@@ -77,11 +77,11 @@ Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtu
 ### Runtime Example
 1. Clone repository from Xilinx GitHub
 ```
-user@machine:~$ git clone https://github.com/Xilinx/software_shell_deployment.git
+user@machine:~$ git clone https://github.com/Xilinx/Xilinx_Base_Runtime.git
 ```
-2. Go to software_shell_deployment directory
+2. Go to Xilinx_Base_Runtime directory
 ```
-user@machine:~$ cd software_shell_deployment
+user@machine:~$ cd Xilinx_Base_Runtime
 ```
 
 3. Run run.sh with corresponding arguments: xrt version and os version
@@ -90,7 +90,7 @@ user@machine:~$ cd software_shell_deployment
 #  ./run.sh      -v       <version>  -o          <os-version>
 #  <version>      : 2018.3 / 2019.1 / 2019.2
 #  <os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos
-user@machine:~/software_shell_deployment$ ./run.sh -v 2019.1 -o ubuntu-18.04
+user@machine:~/Xilinx_Base_Runtime$ ./run.sh -v 2019.1 -o ubuntu-18.04
 ```
 
 4. Inside docker container, run `xbutil list` or `xbutil dmatest` for listing cards or testing dma. Or copy your own application and xclbin files to container and run for test. 
@@ -106,7 +106,7 @@ All the docker images provided by this project can be used as base images for bu
 
 ```
 # Choose one of images as base image based on platform, version and OS version
-FROM xilinx/xsds:alveo-u280-2019-1-ubuntu-1804
+FROM xilinx/xilinx_runtime_base:alveo-2019.2-ubuntu-18.04
 
 # Configure environment what your application needs, for example
 apt-get install [dependencies]
@@ -141,6 +141,6 @@ Then you can use `docker build -t [tag] -f [Dockerfile]` to build your own docke
 > All of them. run.sh script will scan all FPGA devices and map them to docker container. If you want limit specific cards, please refer question #2. Please be aware, mapping device does NOT mean exclusive for the container. 
 
 ## Notice and Disclaimer
-NOTICE: This software is made available to you in the form of a Docker image (the “Image”).  By using this Image, you agree on behalf of yourself and your employer (if applicable) to be bound by this information and the license agreements applicable to the software distributed inside this Image and (if applicable) the software that is not distributed inside this Image but is needed to run the Image and which is downloaded from the internet upon execution of the Docker build utility script made available to you (the “Script”).  Should you elect to execute the Script by entering the necessary commands, you acknowledge that various software will be downloaded, either from the Image or from the internet, and installed in the Image, and you agree that you are solely responsible for reviewing and abiding by the terms of the license agreements governing such software downloaded by the Docker executable and installed into the Image.  The software license agreements are available for your review either in the “LICENSE” file at the Image download site, or in the source code of the software distributed in the Image, or in the case of either (i) operating system software, at the URL provided to you for the main community open source project web page, and (ii) software downloaded from the internet, at the URL provided to you for the original web page where such software is made available for download.  If you do not agree, then you should not “click” accept the notice nor enter the Script command nor otherwise access, download, install or use the Image.  
+NOTICE: This Xilinx_Base_Runtimee to you in the form of a Docker image (the “Image”).  By using this Image, you agree on behalf of yourself and your employer (if applicable) to be bound by this information and the license agreements applicable to the Xilinx_Base_Runtimede this Image and (if applicable) the Xilinx_Base_Runtimeributed inside this Image but is needed to run the Image and which is downloaded from the internet upon execution of the Docker build utility script made available to you (the “Script”).  Should you elect to execute the Script by entering the necessary commands, you acknowledge that various Xilinx_Base_Runtimeed, either from the Image or from the internet, and installed in the Image, and you agree that you are solely responsible for reviewing and abiding by the terms of the license agreements governing such Xilinx_Base_Runtimee Docker executable and installed into the Image.  The Xilinx_Base_Runtimets are available for your review either in the “LICENSE” file at the Image download site, or in the source code of the Xilinx_Base_Runtimehe Image, or in the case of either (i) operating system Xilinx_Base_Runtimeided to you for the main community open source project web page, and (ii) Xilinx_Base_Runtimethe internet, at the URL provided to you for the original web page where such Xilinx_Base_Runtimee for download.  If you do not agree, then you should not “click” accept the notice nor enter the Script command nor otherwise access, download, install or use the Image.  
 
 DISCLAIMER:  THIS IMAGE IS MADE AVAILABLE “AS-IS” AND XILINX DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE. Xilinx shall not be liable (whether in contract or tort, including negligence, or under any other theory of liability) for any loss or damage of any kind or nature related to, arising under, or in connection with, this Image, including for any direct, indirect, special, incidental, or consequential loss or damage (including loss of data, profits, goodwill, or any type of loss or damage suffered as a result of any action brought by a third party) even if such damage or loss was reasonably foreseeable or Xilinx had been advised of the possibility of the same.
