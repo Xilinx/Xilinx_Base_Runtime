@@ -1,10 +1,12 @@
 # Xilinx Runtime Base Image Deployment Docker Solution
 
-This project provides unified docker images for several purposes: 
+This project maintains unified Docker images with XRT (Xilinx runtime) preinstalled and provides scripts to setup and flash the Alveo cards.
 
-* [Setup Host](#setup-host)
+With content found on this repo, the user can:
+
+* [Setup Host (install driver and flash the cards)](#setup-host)
 * [Run Base Docker Image](#run-base-docker-image)
-* [Build docker application by using base image](#build-docker-application-by-using-base-image)
+* [Customize Docker Image for new Application](#build-docker-application-by-using-base-image)
 
 ## Background
 
@@ -14,8 +16,8 @@ Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtu
 
 For running docker containers of FPGA applications, there are several preconditions:
 1. Install Xilinx Alveo FPGA hardware (Alveo U200, Alveo U250 or Alveo U280) on server.
-2. Install XRT (Xilinx Runtime) on host.
-3. Flash Shell for FPGA on host.
+2. Install XRT (Xilinx Runtime) on host (script provided in this repo).
+3. Flash Shell for FPGA on host  (also included in script in this repo).
 4. Run docker FPGA container with privileged mode or mapping both management device and user device\*.
 > By default, Docker containers are “unprivileged” and cannot, for example, run a Docker daemon inside a Docker container. This is because by default a container is not allowed to access any devices, but a “privileged” container is given access to all devices (see the documentation on cgroups devices). If you want to limit access to a specific device or devices you can use the `--device` flag. It allows you to specify one or more devices that will be accessible within the container. For Xilinx Alveo FPGA, it has management function and user function. Docker will take these two functions as two devices for mapping. 
 
@@ -36,9 +38,14 @@ alveo-2019.2-ubuntu-18.04 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 18.04
 
 ## Setup Host
 
-This project will help to install XRT and Shell on the host machine. A single command (host_setup.sh) with two parameters: platform and version can be used to install the XRT, Shell as well as Flash the card.
+In order to install XRT and the platform on the host machine and flash the card, a single command (see host_setup.sh) with two parameters (platform and version) is provided.
 
-The figure shows how installing XRT and Shell is been done. With the specified platform and version, the project copies corresponding XRT and Shell installation packages from [Xilinx lounge page](https://www.xilinx.com/products/boards-and-kits/alveo.html). Then it installs XRT and Shell and flashes the card automatically.  
+The figure below shows how installing XRT and platform is done. With the specified platform and version, the project copies corresponding XRT and platform installation packages from each card product page (U200, U250, U280):
+
+* [Alveo U200](https://www.xilinx.com/products/boards-and-kits/alveo/u200.html#gettingStarted)
+* [Alveo U250](https://www.xilinx.com/products/boards-and-kits/alveo/u250.html#gettingStarted)
+* [Alveo U280](https://www.xilinx.com/products/boards-and-kits/alveo/u280.html#gettingStarted)
+
 
 ![Install XRT and Shell](doc/install_xrt_shell.png)
 
