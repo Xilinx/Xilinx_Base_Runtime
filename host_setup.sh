@@ -44,6 +44,7 @@ fi
 
 XRT=1
 SHELL=1
+INSTALL_DOCKER=0
 
 notice_disclaimer() {
     cat doc/notice_disclaimer.txt
@@ -72,6 +73,7 @@ case "$1" in
     --skip-shell-flash   ) SHELL=0           ; shift 1 ;;
     -p|--platform        ) PLATFORM="$2"     ; shift 2 ;;
     -v|--version         ) VERSION="$2"      ; shift 2 ;;
+    --install-docker     ) INSTALL_DOCKER=1  ; shift 1 ;;
     -h|--help            ) usage             ; exit  1 ;;
 *) break ;;
 esac
@@ -108,6 +110,10 @@ if [ $? != 0 ] ; then
     elif [[ "$OSVERSION" == "centos" ]]; then
         yum install -y wget
     fi
+fi
+
+if [[ "$INSTALL_DOCKER" == 1 ]]; then
+    ./utilities/docker_install.sh
 fi
 
 if [ "$XRT" == 0 &&  "$SHELL" == 0] ; then echo "Please do NOT skip both XRT installation and card flashing." >&2 ; usage; exit 1 ; fi

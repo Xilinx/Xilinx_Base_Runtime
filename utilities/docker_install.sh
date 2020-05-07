@@ -16,7 +16,7 @@ if [[ "$OSVERSION" == "ubuntu" ]]; then
 elif [[ "$OSVERSION" == "centos" ]]; then
 	DOCKER_INFO=`yum list installed 2>/dev/null | grep docker-ce`
 else
-	echo "The script supports: Ubuntu 16.04, Ubuntu 18.04 and Centos 7. Please install DockerCE manually following: https://docs.docker.com/engine/install/."
+	echo "The script supports: Ubuntu 16.04, Ubuntu 18.04 and Centos 7. For other operating system, please install DockerCE manually following: https://docs.docker.com/engine/install/."
 	exit 1
 fi
 
