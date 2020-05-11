@@ -17,7 +17,7 @@ usage() {
     echo ""
     echo "Example:"
     echo "Install 2019.2 XRT for Alveo U200 and flash Shell "
-    echo "  ./install.sh -p alveo-u200 -v 2019.2"
+    echo "  ./host_setup.sh -p alveo-u200 -v 2019.2"
 
 }
 

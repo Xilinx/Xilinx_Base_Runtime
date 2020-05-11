@@ -19,7 +19,7 @@ usage() {
     echo ""
     echo "Additional parameters: "
     echo "-c [command] : Execute specific command when start docker container"
-    echo "--pull       : Pull docker image before run to update "
+    echo "--pull       : Pull docker image before run"
 
 }
 
@@ -56,6 +56,30 @@ confirm() {
     esac
 }
 
+check_docker() {
+    OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}' | tr -d '"'`
+
+    if [[ "$OSVERSION" == "ubuntu" ]]; then
+        DOCKER_INFO=`apt list --installed 2>/dev/null | grep docker-ce`
+    elif [[ "$OSVERSION" == "centos" ]]; then
+        DOCKER_INFO=`yum list installed 2>/dev/null | grep docker-ce`
+    else
+        return 0
+    fi
+    if [ $? == 0 ] ; then
+        DOCKER_INFO=`docker info 2>/dev/null`
+        if [ $? != 0 ] ; then
+            docker info
+            return 1
+        fi
+    else
+        echo "Docker is NOT installed. Please run "
+        echo "    ./utilities/docker_install.sh"
+        echo "to install docker service. "
+        return 1
+    fi
+}
+
 notice_disclaimer
 confirm 
 
@@ -72,6 +96,11 @@ if [ $? != 0 ] ; then
 	exit 1
 fi
 
+check_docker
+
+if [[ $? != 0 ]]; then
+    exit 1
+fi
 
 while true
 do

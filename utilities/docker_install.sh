@@ -22,9 +22,10 @@ fi
 
 if [ $? == 0 ] ; then
 	echo "You have already installed docker."
-	DOCKER_VERSION=`docker info 2>/dev/null |grep "Server Version"| awk -F: '{print $2}'`
+	DOCKER_INFO=`docker info 2>/dev/null`
 	if [ $? == 0 ] ; then
-		echo "Docker Version:$DOCKER_VERSION"
+		DOCKER_VERSION=`docker info 2>/dev/null |grep "Server Version"| awk -F: '{print $2}'`
+		echo "Docker Version:$DOCKERAP_VERSION"
 	else
 		docker info
 	fi
