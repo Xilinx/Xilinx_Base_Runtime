@@ -91,11 +91,12 @@ flash_cards() {
         rm /tmp/$SHELL_PACKAGE
     fi
     
-    echo "Flash Card"
-    if [[ -f /opt/xilinx/xrt/bin/xbmgmt ]]; then
+    if [[ "$VERSION" == "2018.3" ]]; then
+        /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP 
+    elif [[ "$VERSION" == "2019.1" ]]; then
         /opt/xilinx/xrt/bin/xbmgmt flash -a $DSA  $TIMESTAMP
-    else
-        /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP
+    elif [[ "$VERSION"  == "2019.2" ]]; then
+        /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
     fi
 }
 
