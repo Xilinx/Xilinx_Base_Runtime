@@ -62,13 +62,12 @@ root@machine:~$ git clone https://github.com/Xilinx/Xilinx_Base_Runtime.git
 root@machine:~$ cd Xilinx_Base_Runtime
 ```
 
-4. According to demand, choose deployment shell with corresponding parameters: platform and version.
+4. According to demand, choose deployment shell base on version.
 ```
-#  ./host_setup.sh     --platform <platform> --version <version>
-#  ./host_setup.sh      -p        <platform>  -v       <version>
-#  <platform>     : alveo-u200 / alveo-u250 / alveo-u280
+#  ./host_setup.sh     --version <version>
+#  ./host_setup.sh      -v       <version>
 #  <version>      : 2018.3 / 2019.1 / 2019.2
-root@machine:~$ ./host_setup.sh -p alveo-u200 -v 2019.1 
+root@machine:~$ ./host_setup.sh -v 2019.1 
 ```
 
 5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine after installation completed to load the new image on FPGA.
