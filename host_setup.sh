@@ -61,6 +61,10 @@ install_xrt() {
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
         apt-get install --reinstall /tmp/$XRT_PACKAGE
     elif [[ "$OSVERSION" == "centos" ]]; then
+        XRT_VERSION=`yum info xrt 2> /dev/null | grep Version`
+        if [[ $? == 0 ]]; then
+            yum remove -y xrt
+        fi
         yum install epel-release
         yum install /tmp/$XRT_PACKAGE
     fi

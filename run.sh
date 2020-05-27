@@ -57,6 +57,10 @@ confirm() {
 }
 
 check_docker() {
+    DOCKER_INFO=`docker info 2>/dev/null`
+    if [ $? == 0 ] ; then
+        return 0
+    fi
     OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}' | tr -d '"'`
 
     if [[ "$OSVERSION" == "ubuntu" ]]; then
