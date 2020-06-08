@@ -25,7 +25,7 @@ if [ $? == 0 ] ; then
 	DOCKER_INFO=`docker info 2>/dev/null`
 	if [ $? == 0 ] ; then
 		DOCKER_VERSION=`docker info 2>/dev/null |grep "Server Version"| awk -F: '{print $2}'`
-		echo "Docker Version:$DOCKERAP_VERSION"
+		echo "Docker Version:$DOCKER_VERSION"
 	else
 		docker info
 	fi

@@ -35,6 +35,37 @@ list() {
     echo "Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
 }
 
+vercomp () {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
 get_packages() {
     COMB="${PLATFORM}_${VERSION}_${OSVERSION}"
 
@@ -45,6 +76,7 @@ get_packages() {
         TIMESTAMP=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $4}' | awk -F= '{print $2}'`
         PACKAGE_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $6}' | awk -F= '{print $2}'`
         PACKAGE_VERSION=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
+        XRT_VERSION=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $8}' | awk -F= '{print $2}'`
     else
         usage
         echo ""
@@ -61,12 +93,19 @@ install_xrt() {
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
         apt-get install --reinstall /tmp/$XRT_PACKAGE
     elif [[ "$OSVERSION" == "centos" ]]; then
-        XRT_VERSION=`yum info xrt 2> /dev/null | grep Version`
+        XRT_VERSION_INSTALLED=`yum info installed xrt 2> /dev/null | grep Version`
         if [[ $? == 0 ]]; then
-            yum remove -y xrt
+            XRT_VERSION_INSTALLED=`echo "$XRT_VERSION_INSTALLED" | cut -d ":" -f2| cut -d " " -f2`
+            vercomp $XRT_VERSION_INSTALLED $XRT_VERSION
+            case $? in
+                0) yum reinstall /tmp/$XRT_PACKAGE;;
+                1) yum downgrade /tmp/$XRT_PACKAGE;;
+                2) yum install /tmp/$XRT_PACKAGE;;
+            esac
+        else
+            yum install epel-release
+            yum install /tmp/$XRT_PACKAGE
         fi
-        yum install epel-release
-        yum install /tmp/$XRT_PACKAGE
     fi
     rm /tmp/$XRT_PACKAGE
 }
@@ -90,7 +129,8 @@ flash_cards() {
         if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
             apt-get install /tmp/$SHELL_PACKAGE
         elif [[ "$OSVERSION" == "centos" ]]; then
-            rpm -i /tmp/$SHELL_PACKAGE
+            yum remove -y $PACKAGE_NAME
+            yum install /tmp/$SHELL_PACKAGE
         fi
         rm /tmp/$SHELL_PACKAGE
     fi
@@ -204,45 +244,26 @@ if [[ "$SHELL" == 1 ]]; then
     done
 
     if [[ "$U200" == 0 && "$U250" == 0 && "$U280" == 0 ]]; then
-        echo "[ERROR] No FPGA Board Detected. You need at least one FPGA board to use this script."
-        list
-        exit 1;
+        echo "[WARNING] No FPGA Board Detected. Skip shell flash."
+        exit 0;
     fi
 
     if [[ "$U200" != 0 ]]; then
         echo "You have $U200 U200 card(s)."
-        read -r -p "${1:-Do you want to flash U200 card(s)? [y/n]:} " response
-        case "$response" in
-            [yY][eE][sS]|[yY]) 
-                PLATFORM="alveo-u200" 
-                flash_cards
-                ;;
-            *) echo "Skip flash U200 card(s). " ;;
-        esac
+        PLATFORM="alveo-u200" 
+        flash_cards
     fi
 
     if [[ "$U250" != 0 ]]; then
         echo "You have $U250 U250 card(s)."
-        read -r -p "${1:-Do you want to flash U250 card(s)? [y/n]:} " response
-        case "$response" in
-            [yY][eE][sS]|[yY]) 
-                PLATFORM="alveo-u250" 
-                flash_cards
-                ;;
-            *) echo "Skip flash U250 card(s). ";;
-        esac
+        PLATFORM="alveo-u250" 
+        flash_card
     fi
 
     if [[ "$U280" != 0 ]]; then
         echo "You have $U280 U280 card(s)."
-        read -r -p "${1:-Do you want to flash U280 card(s)? [y/n]:} " response
-        case "$response" in
-            [yY][eE][sS]|[yY])
-                PLATFORM="alveo-u280" 
-                flash_cards 
-                ;;
-            *) echo "Skip flash U250 card(s). ";;
-        esac
+        PLATFORM="alveo-u280" 
+        flash_card
     fi
     
 fi
