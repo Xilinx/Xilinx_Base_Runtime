@@ -207,13 +207,16 @@ if [ $? != 0 ] ; then
     fi
 fi
 
-if [[ echo $PATH | grep -q  "/usr/local/sbin" ]]; then
+echo $PATH | grep -q  "/your/search/path"
+if [[ $? != 0 ]]; then
     export PATH=$PATH:"/usr/local/sbin"
 fi
-if [[ echo $PATH | grep -q  "/usr/sbin" ]]; then
+echo $PATH | grep -q  "/usr/sbin"
+if [[ $? != 0 ]]; then
     export PATH=$PATH:"/usr/sbin"
 fi
-if [[ echo $PATH | grep -q  "/sbin" ]]; then
+echo $PATH | grep -q  "/sbin"
+if [[ $? != 0 ]]; then
     export PATH=$PATH:"/sbin"
 fi
 
