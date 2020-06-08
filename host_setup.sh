@@ -207,6 +207,15 @@ if [ $? != 0 ] ; then
     fi
 fi
 
+if [[ echo $PATH | grep -q  "/usr/local/sbin" ]]; then
+    export PATH=$PATH:"/usr/local/sbin"
+fi
+if [[ echo $PATH | grep -q  "/usr/sbin" ]]; then
+    export PATH=$PATH:"/usr/sbin"
+fi
+if [[ echo $PATH | grep -q  "/sbin" ]]; then
+    export PATH=$PATH:"/sbin"
+fi
 
 if [[ "$INSTALL_DOCKER" == 1 ]]; then
     ./utilities/docker_install.sh
