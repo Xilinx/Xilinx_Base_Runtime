@@ -77,6 +77,11 @@ get_packages() {
         PACKAGE_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $6}' | awk -F= '{print $2}'`
         PACKAGE_VERSION=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
         XRT_VERSION=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $8}' | awk -F= '{print $2}'`
+        if [[ "$PLATFORM" == "alveo-u50" ]]; then
+            CMC_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $9}' | awk -F= '{print $2}'`
+            SC_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $10}' | awk -F= '{print $2}'`
+            SHELL_TARBALL=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $11}' | awk -F= '{print $2}'`
+        fi
     else
         usage
         echo ""
@@ -96,6 +101,7 @@ install_xrt() {
         XRT_VERSION_INSTALLED=`yum info installed xrt 2> /dev/null | grep Version`
         if [[ $? == 0 ]]; then
             XRT_VERSION_INSTALLED=`echo "$XRT_VERSION_INSTALLED" | cut -d ":" -f2| cut -d " " -f2`
+            XRT_VERSION_INSTALLED=`echo "${XRT_VERSION_INSTALLED/-/.}"`
             vercomp $XRT_VERSION_INSTALLED $XRT_VERSION
             case $? in
                 0) yum reinstall /tmp/$XRT_PACKAGE;;
@@ -139,9 +145,35 @@ flash_cards() {
         /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP 
     elif [[ "$VERSION" == "2019.1" ]]; then
         /opt/xilinx/xrt/bin/xbmgmt flash -a $DSA  $TIMESTAMP
-    elif [[ "$VERSION"  == "2019.2" ]]; then
+    elif [[ "$VERSION"  == "2019.2" || "$VERSION"  == "2020.1" ]]; then
         /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
     fi
+}
+
+flash_cards_u50() {
+    get_packages
+    check_packages
+    if [[ $? != 0 ]]; then
+        echo "Download Shell package"
+        wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
+
+        # Unpack tarball
+        tar -zxvf $SHELL_TARBALL -C /tmp
+        echo "Install Shell"
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+            apt-get install --reinstall /tmp/$CMC_PACKAGE
+            apt-get install --reinstall /tmp/$SC_PACKAGE
+            apt-get install --reinstall /tmp/$SHELL_PACKAGE
+        elif [[ "$OSVERSION" == "centos" ]]; then
+            yum remove -y xilinx-cmc-u50 xilinx-sc-fw-u50
+            yum install /tmp/$CMC_PACKAGE
+            yum install /tmp/$SC_PACKAGE
+            yum install /tmp/$SHELL_PACKAGE
+        fi
+        rm /tmp/$SHELL_PACKAGE
+    fi
+
+    /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
 }
 
 notice_disclaimer() {
@@ -160,6 +192,17 @@ confirm() {
             ;;
     esac
 }
+
+VERSION="2020.1"
+for OSVERSION in "centos" "ubuntu-16.04" "ubuntu-18.04"; do
+    for PLATFORM in "alveo-u200" "alveo-u250" "alveo-u280" "alveo-u50" ; do
+        echo "${PLATFORM}_${VERSION}_${OSVERSION}"
+        get_packages
+        echo "$XRT_PACKAGE, $DSA, $SHELL_PACKAGE, $TIMESTAMP, $PACKAGE_NAME, $PACKAGE_VERSION, $XRT_VERSION, $CMC_PACKAGE, $SC_PACKAGE, $SHELL_TARBALL"
+    done
+    
+done
+exit 0
 
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 

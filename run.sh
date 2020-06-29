@@ -120,6 +120,16 @@ done
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
+if [[ "$VERSION" == "2019.1" ]]; then
+    read -r -p "${1:-Is this for U50? [y/n]:} " response
+    case "$response" in
+        [yY][eE][sS]|[yY]) 
+            PLATFORM="alveo-u50"
+            ;;
+        *)
+            ;;
+    esac
+fi
 
 COMB="${PLATFORM}_${VERSION}_${OSVERSION}"
 

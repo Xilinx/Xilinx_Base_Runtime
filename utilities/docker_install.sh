@@ -46,7 +46,7 @@ else
 		exit 1
 	fi
 	echo "Configure docker"
-	mkdir -p /etc/docker && echo \'{\"max-concurrent-downloads\": 1}\' | tee -a /etc/docker/daemon.json && systemctl restart docker && systemctl enable docker > /tmp/xxappstore_hostsetup_configuredocker.log 2>&1
+	mkdir -p /etc/docker && echo '{"max-concurrent-downloads": 1}' | tee -a /etc/docker/daemon.json && systemctl restart docker && systemctl enable docker > /tmp/xxappstore_hostsetup_configuredocker.log 2>&1
 	if [[ $? != 0 ]]; then
 		echo "[ERROR] Docker Configuration. Check log file /tmp/xxappstore_hostsetup_configuredocker.log"
 		exit 1
