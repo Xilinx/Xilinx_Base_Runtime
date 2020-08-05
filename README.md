@@ -32,9 +32,12 @@ alveo-2018.3-ubuntu-18.04 | Alveo U200 / U250 | 2018.3 | Ubuntu 18.04
 alveo-2019.1-centos      | Alveo U200 / U250 / U280 | 2019.1 | CentOS
 alveo-2019.1-ubuntu-16.04 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 16.04
 alveo-2019.1-ubuntu-18.04 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
-alveo-2019.2-centos      | Alveo U200 / U250 / U280 | 2019.2 | CentOS
-alveo-2019.2-ubuntu-16.04 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 16.04
-alveo-2019.2-ubuntu-18.04 | Alveo U200 / U250 / U280 | 2019.2 | Ubuntu 18.04
+alveo-2019.2-centos      | Alveo U200 / U250 / U280 / U50| 2019.2 | CentOS
+alveo-2019.2-ubuntu-16.04 | Alveo U200 / U250 / U280 / U50 | 2019.2 | Ubuntu 16.04
+alveo-2019.2-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2019.2 | Ubuntu 18.04
+alveo-2020.1-centos      | Alveo U200 / U250 / U280 / U50| 2020.1 | CentOS
+alveo-2020.1-ubuntu-16.04 | Alveo U200 / U250 / U280 / U50 | 2020.1 | Ubuntu 16.04
+alveo-2020.1-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2020.1 | Ubuntu 18.04
 
 ## Setup Host
 
@@ -66,7 +69,7 @@ root@machine:~$ cd Xilinx_Base_Runtime
 ```
 #  ./host_setup.sh     --version <version>
 #  ./host_setup.sh      -v       <version>
-#  <version>      : 2018.3 / 2019.1 / 2019.2
+#  <version>      : 2018.3 / 2019.1 / 2019.2 / 2020.1
 root@machine:~$ ./host_setup.sh -v 2019.1 
 ```
 
@@ -94,7 +97,7 @@ user@machine:~$ cd Xilinx_Base_Runtime
 ```
 #  ./run.sh     --version <version> --os-version <os-version>
 #  ./run.sh      -v       <version>  -o          <os-version>
-#  <version>      : 2018.3 / 2019.1 / 2019.2
+#  <version>      : 2018.3 / 2019.1 / 2019.2 /2020.1
 #  <os-version>   : ubuntu-18.04 / ubuntu-16.04 / centos
 user@machine:~/Xilinx_Base_Runtime$ ./run.sh -v 2019.1 -o ubuntu-18.04
 ```

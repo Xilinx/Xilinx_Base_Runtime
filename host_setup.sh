@@ -10,7 +10,7 @@ usage() {
     echo "Usage:"
     echo "  ./host_setup.sh --version <version>"
     echo "  ./host_setup.sh  -v       <version>"
-    echo "  <version>        : 2018.3 / 2019.1 / 2019.2"
+    echo "  <version>        : 2018.3 / 2019.1 / 2019.2 / 2020.1"
     echo "  --skip-xrt-install    : skip install XRT"
     echo "  --skip-shell-flash    : skip flash Shell"
     echo "  --install-docker      : install docker serveice"
@@ -23,16 +23,19 @@ usage() {
 
 list() {
     echo ""
-    echo "Support Platform              Version      OS Version"
-    echo "Alveo U200 / U250             2018.3       CentOS"
-    echo "Alveo U200 / U250             2018.3       Ubuntu 16.04"
-    echo "Alveo U200 / U250             2018.3       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280      2019.1       CentOS"
-    echo "Alveo U200 / U250 / U280      2019.1       Ubuntu 16.04"
-    echo "Alveo U200 / U250 / U280      2019.1       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280      2019.2       CentOS"
-    echo "Alveo U200 / U250 / U280      2019.2       Ubuntu 16.04"
-    echo "Alveo U200 / U250 / U280      2019.2       Ubuntu 18.04"
+    echo "Support Platform                   Version      OS Version"
+    echo "Alveo U200 / U250                  2018.3       CentOS"
+    echo "Alveo U200 / U250                  2018.3       Ubuntu 16.04"
+    echo "Alveo U200 / U250                  2018.3       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280           2019.1       CentOS"
+    echo "Alveo U200 / U250 / U280           2019.1       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280           2019.1       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 /u50      2019.2       CentOS"
+    echo "Alveo U200 / U250 / U280 /u50      2019.2       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 /u50      2019.2       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 /u50      2020.1       CentOS"
+    echo "Alveo U200 / U250 / U280 /u50      2020.1       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 /u50      2020.1       Ubuntu 18.04"
 }
 
 vercomp () {
@@ -288,6 +291,7 @@ if [[ "$SHELL" == 1 ]]; then
     U200=0
     U250=0
     U280=0
+    U50=0
     for DEVICE_ID in $(lspci  -d 10ee: | grep " Processing accelerators" | grep "Xilinx" | grep ".0 " | cut -d" " -f7); do
         if [[ "$DEVICE_ID" == "5000" ]]; then
             U200=$((U200 + 1))
@@ -295,6 +299,8 @@ if [[ "$SHELL" == 1 ]]; then
             U250=$((U250 + 1))
         elif [[ "$DEVICE_ID" == "5008" ]]; then
             U280=$((U280 + 1))
+        elif [[ "$DEVICE_ID" == "5020" ]]; then
+            U50=$((U50 + 1))
         fi
     done
 
@@ -319,6 +325,12 @@ if [[ "$SHELL" == 1 ]]; then
         echo "You have $U280 U280 card(s)."
         PLATFORM="alveo-u280" 
         flash_card
+    fi
+
+    if [[ "$U50" != 0 ]]; then
+        echo "You have $U50 U50 card(s)."
+        PLATFORM="alveo-u50" 
+        flash_cards_u50
     fi
     
 fi
