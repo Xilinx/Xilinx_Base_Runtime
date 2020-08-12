@@ -142,8 +142,11 @@ flash_cards() {
             yum install /tmp/$SHELL_PACKAGE
         fi
         rm /tmp/$SHELL_PACKAGE
+    else
+        echo "The package is already installed. "
     fi
     
+    echo "Flash Card(s). "
     if [[ "$VERSION" == "2018.3" ]]; then
         /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP 
     elif [[ "$VERSION" == "2019.1" ]]; then
@@ -161,7 +164,7 @@ flash_cards_u50() {
         wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
 
         # Unpack tarball
-        tar -zxvf $SHELL_TARBALL -C /tmp
+        tar -zxvf /tmp/$SHELL_TARBALL -C /tmp
         echo "Install Shell"
         if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
             apt-get install --reinstall /tmp/$CMC_PACKAGE
@@ -173,9 +176,12 @@ flash_cards_u50() {
             yum install /tmp/$SC_PACKAGE
             yum install /tmp/$SHELL_PACKAGE
         fi
-        rm /tmp/$SHELL_PACKAGE
+        rm /tmp/$SHELL_PACKAGE /tmp/$CMC_PACKAGE /tmp/$SC_PACKAGE /tmp/$SHELL_PACKAGE
+    else
+        echo "The package is already installed. "
     fi
 
+    echo "Flash Card(s). "
     /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
 }
 
@@ -195,17 +201,6 @@ confirm() {
             ;;
     esac
 }
-
-VERSION="2020.1"
-for OSVERSION in "centos" "ubuntu-16.04" "ubuntu-18.04"; do
-    for PLATFORM in "alveo-u200" "alveo-u250" "alveo-u280" "alveo-u50" ; do
-        echo "${PLATFORM}_${VERSION}_${OSVERSION}"
-        get_packages
-        echo "$XRT_PACKAGE, $DSA, $SHELL_PACKAGE, $TIMESTAMP, $PACKAGE_NAME, $PACKAGE_VERSION, $XRT_VERSION, $CMC_PACKAGE, $SC_PACKAGE, $SHELL_TARBALL"
-    done
-    
-done
-exit 0
 
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 
@@ -304,7 +299,7 @@ if [[ "$SHELL" == 1 ]]; then
         fi
     done
 
-    if [[ "$U200" == 0 && "$U250" == 0 && "$U280" == 0 ]]; then
+    if [[ "$U200" == 0 && "$U250" == 0 && "$U280" == 0 && "$U50" == 0 ]]; then
         echo "[WARNING] No FPGA Board Detected. Skip shell flash."
         exit 0;
     fi
