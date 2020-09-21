@@ -28,6 +28,8 @@ if [ $? == 0 ] ; then
 		echo "Docker Version:$DOCKER_VERSION"
 	else
 		docker info
+		echo "Please run following command if docker daemon is not running:"
+		echo "    sudo systemctl start docker"
 	fi
 else
 	echo "Install docker on $OSVERSION..."

@@ -128,6 +128,10 @@ check_packages() {
 }
 
 flash_cards() {
+    if [[ "$PLATFORM" == "alveo-u50" ]]; then
+        flash_cards_u50
+        return 
+    fi
     get_packages
     check_packages
     if [[ $? != 0 ]]; then
@@ -211,6 +215,7 @@ XRT=1
 SHELL=1
 PLATFORM="alveo-u200"
 VERSION="NONE"
+PLATFORM_ONLY="NONE"
 INSTALL_DOCKER=0
 
 notice_disclaimer
@@ -222,6 +227,7 @@ case "$1" in
     --skip-xrt-install   ) XRT=0             ; shift 1 ;;
     --skip-shell-flash   ) SHELL=0           ; shift 1 ;;
     -v|--version         ) VERSION="$2"      ; shift 2 ;;
+    -p|--platform        ) PLATFORM_ONLY="$2"; shift 2 ;;
     --install-docker     ) INSTALL_DOCKER=1  ; shift 1 ;;
     -h|--help            ) usage             ; exit  1 ;;
     ""                   ) break ;;
@@ -288,13 +294,13 @@ if [[ "$SHELL" == 1 ]]; then
     U280=0
     U50=0
     for DEVICE_ID in $(lspci  -d 10ee: | grep " Processing accelerators" | grep "Xilinx" | grep ".0 " | cut -d" " -f7); do
-        if [[ "$DEVICE_ID" == "5000" ]]; then
+        if [[ "$DEVICE_ID" == "5000" ]] || [[ "$DEVICE_ID" == "d000" ]]; then
             U200=$((U200 + 1))
-        elif [[ "$DEVICE_ID" == "5004" ]]; then
+        elif [[ "$DEVICE_ID" == "5004" ]] || [[ "$DEVICE_ID" == "d004" ]]; then
             U250=$((U250 + 1))
-        elif [[ "$DEVICE_ID" == "5008" ]]; then
+        elif [[ "$DEVICE_ID" == "5008" ]] || [[ "$DEVICE_ID" == "d008" ]] || [[ "$DEVICE_ID" == "500c" ]] || [[ "$DEVICE_ID" == "d00c" ]]; then
             U280=$((U280 + 1))
-        elif [[ "$DEVICE_ID" == "5020" ]]; then
+        elif [[ "$DEVICE_ID" == "5020" ]] || [[ "$DEVICE_ID" == "d020" ]]; then
             U50=$((U50 + 1))
         fi
     done
@@ -304,28 +310,25 @@ if [[ "$SHELL" == 1 ]]; then
         exit 0;
     fi
 
-    if [[ "$U200" != 0 ]]; then
-        echo "You have $U200 U200 card(s)."
-        PLATFORM="alveo-u200" 
+    if [[ "$PLATFORM_ONLY" != "NONE" ]]; then
+        PF=`echo $PLATFORM_ONLY | awk -F'-' '{print $2}' | awk '{print toupper($0)}'`
+        if [[ "$(($PF))" == 0 ]]; then
+            echo "[Error]: You don't have $PF card! "
+            exit 1
+        fi
+        echo "You have $(($PF)) $PF card(s). "
+        PLATFORM=`echo $PLATFORM_ONLY`
+        # echo $PLATFORM
         flash_cards
-    fi
-
-    if [[ "$U250" != 0 ]]; then
-        echo "You have $U250 U250 card(s)."
-        PLATFORM="alveo-u250" 
-        flash_card
-    fi
-
-    if [[ "$U280" != 0 ]]; then
-        echo "You have $U280 U280 card(s)."
-        PLATFORM="alveo-u280" 
-        flash_card
-    fi
-
-    if [[ "$U50" != 0 ]]; then
-        echo "You have $U50 U50 card(s)."
-        PLATFORM="alveo-u50" 
-        flash_cards_u50
+    else
+        for PF in U200 U250 U280 U50; do
+            if [[ "$(($PF))" != 0 ]]; then
+                echo "You have $(($PF)) $PF card(s). "
+                PLATFORM=`echo "alveo-$PF" | awk '{print tolower($0)}'`
+                # echo $PLATFORM
+                flash_cards
+            fi
+        done
     fi
     
 fi
