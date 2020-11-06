@@ -99,6 +99,10 @@ install_xrt() {
 
     echo "Install XRT"
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+        apt update
+        apt install python3-pip
+        pip3 install --upgrade pip
+        pip3 install pyopencl==2020.1
         apt-get install --reinstall /tmp/$XRT_PACKAGE
     elif [[ "$OSVERSION" == "centos" ]]; then
         XRT_VERSION_INSTALLED=`yum info installed xrt 2> /dev/null | grep Version`
@@ -193,6 +197,29 @@ notice_disclaimer() {
     cat doc/notice_disclaimer.txt
 }
 
+detect_cards() {
+    lspci > /dev/null
+    if [ $? != 0 ] ; then
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+            apt-get install -y pciutils
+        elif [[ "$OSVERSION" == "centos" ]]; then
+            yum install -y pciutils
+        fi
+    fi
+
+    for DEVICE_ID in $(lspci  -d 10ee: | grep " Processing accelerators" | grep "Xilinx" | grep ".0 " | cut -d" " -f7); do
+        if [[ "$DEVICE_ID" == "5000" ]] || [[ "$DEVICE_ID" == "d000" ]]; then
+            U200=$((U200 + 1))
+        elif [[ "$DEVICE_ID" == "5004" ]] || [[ "$DEVICE_ID" == "d004" ]]; then
+            U250=$((U250 + 1))
+        elif [[ "$DEVICE_ID" == "5008" ]] || [[ "$DEVICE_ID" == "d008" ]] || [[ "$DEVICE_ID" == "500c" ]] || [[ "$DEVICE_ID" == "d00c" ]]; then
+            U280=$((U280 + 1))
+        elif [[ "$DEVICE_ID" == "5020" ]] || [[ "$DEVICE_ID" == "d020" ]]; then
+            U50=$((U50 + 1))
+        fi
+    done
+}
+
 confirm() {
     # call with a prompt string or use a default
     read -r -p "${1:-Are you sure you wish to proceed? [y/n]:} " response
@@ -217,6 +244,10 @@ PLATFORM="alveo-u200"
 VERSION="NONE"
 PLATFORM_ONLY="NONE"
 INSTALL_DOCKER=0
+U200=0
+U250=0
+U280=0
+U50=0
 
 notice_disclaimer
 confirm 
@@ -273,37 +304,14 @@ fi
 
 if [[ "$XRT" == 0 &&  "$SHELL" == 0 ]] ; then echo "Please do NOT skip both XRT installation and card flashing." >&2 ; usage; exit 1 ; fi
 
+detect_cards
+
 if [[ "$XRT" == 1 ]]; then
     get_packages
     install_xrt
 fi
 
 if [[ "$SHELL" == 1 ]]; then
-
-    lspci > /dev/null
-    if [ $? != 0 ] ; then
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-            apt-get install -y pciutils
-        elif [[ "$OSVERSION" == "centos" ]]; then
-            yum install -y pciutils
-        fi
-    fi
-
-    U200=0
-    U250=0
-    U280=0
-    U50=0
-    for DEVICE_ID in $(lspci  -d 10ee: | grep " Processing accelerators" | grep "Xilinx" | grep ".0 " | cut -d" " -f7); do
-        if [[ "$DEVICE_ID" == "5000" ]] || [[ "$DEVICE_ID" == "d000" ]]; then
-            U200=$((U200 + 1))
-        elif [[ "$DEVICE_ID" == "5004" ]] || [[ "$DEVICE_ID" == "d004" ]]; then
-            U250=$((U250 + 1))
-        elif [[ "$DEVICE_ID" == "5008" ]] || [[ "$DEVICE_ID" == "d008" ]] || [[ "$DEVICE_ID" == "500c" ]] || [[ "$DEVICE_ID" == "d00c" ]]; then
-            U280=$((U280 + 1))
-        elif [[ "$DEVICE_ID" == "5020" ]] || [[ "$DEVICE_ID" == "d020" ]]; then
-            U50=$((U50 + 1))
-        fi
-    done
 
     if [[ "$U200" == 0 && "$U250" == 0 && "$U280" == 0 && "$U50" == 0 ]]; then
         echo "[WARNING] No FPGA Board Detected. Skip shell flash."
