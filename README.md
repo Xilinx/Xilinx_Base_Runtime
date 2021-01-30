@@ -10,7 +10,7 @@ With content found on this repo, the user can:
 
 ## Background
 
-Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver Xilinx_Base_Runtimed containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one package. For more docker information, please refer [Docker Documentation](https://docs.docker.com). 
+Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver Xilinx_Base_Runtime containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one package. For more docker information, please refer [Docker Documentation](https://docs.docker.com). 
 
 ![Runtime](doc/runtime.png)
 
