@@ -10,7 +10,7 @@ usage() {
     echo "Usage:"
     echo "  ./host_setup.sh --version <version>"
     echo "  ./host_setup.sh  -v       <version>"
-    echo "  <version>        : 2018.3 / 2019.1 / 2019.2 / 2020.1"
+    echo "  <version>        : 2018.3 / 2019.1 / 2019.2 / 2020.1 / 2020.2"
     echo "  --skip-xrt-install    : skip install XRT"
     echo "  --skip-shell-flash    : skip flash Shell"
     echo "  --install-docker      : install docker serveice"
@@ -24,18 +24,22 @@ usage() {
 list() {
     echo ""
     echo "Support Platform                   Version      OS Version"
-    echo "Alveo U200 / U250                  2018.3       CentOS"
+    echo "Alveo U200 / U250                  2018.3       CentOS 7"
     echo "Alveo U200 / U250                  2018.3       Ubuntu 16.04"
     echo "Alveo U200 / U250                  2018.3       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280           2019.1       CentOS"
+    echo "Alveo U200 / U250 / U280           2019.1       CentOS 7"
     echo "Alveo U200 / U250 / U280           2019.1       Ubuntu 16.04"
     echo "Alveo U200 / U250 / U280           2019.1       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280 /u50      2019.2       CentOS"
+    echo "Alveo U200 / U250 / U280 /u50      2019.2       CentOS 7"
     echo "Alveo U200 / U250 / U280 /u50      2019.2       Ubuntu 16.04"
     echo "Alveo U200 / U250 / U280 /u50      2019.2       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280 /u50      2020.1       CentOS"
+    echo "Alveo U200 / U250 / U280 /u50      2020.1       CentOS 7"
     echo "Alveo U200 / U250 / U280 /u50      2020.1       Ubuntu 16.04"
     echo "Alveo U200 / U250 / U280 /u50      2020.1       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 /u50      2020.2       CentOS 7"
+    echo "Alveo U200 / U250 / U280 /u50      2020.2       CentOS 8"
+    echo "Alveo U200 / U250 / U280 /u50      2020.2       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 /u50      2020.2       Ubuntu 18.04"
 }
 
 vercomp () {
@@ -100,25 +104,20 @@ install_xrt() {
     echo "Install XRT"
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
         apt update
-        apt install python3-pip
+        apt install -y python3-pip
         pip3 install --upgrade pip
         pip3 install pyopencl==2020.1
-        apt-get install --reinstall /tmp/$XRT_PACKAGE
-    elif [[ "$OSVERSION" == "centos" ]]; then
-        XRT_VERSION_INSTALLED=`yum info installed xrt 2> /dev/null | grep Version`
-        if [[ $? == 0 ]]; then
-            XRT_VERSION_INSTALLED=`echo "$XRT_VERSION_INSTALLED" | cut -d ":" -f2| cut -d " " -f2`
-            XRT_VERSION_INSTALLED=`echo "${XRT_VERSION_INSTALLED/-/.}"`
-            vercomp $XRT_VERSION_INSTALLED $XRT_VERSION
-            case $? in
-                0) yum reinstall /tmp/$XRT_PACKAGE;;
-                1) yum downgrade /tmp/$XRT_PACKAGE;;
-                2) yum install /tmp/$XRT_PACKAGE;;
-            esac
-        else
-            yum install epel-release
-            yum install /tmp/$XRT_PACKAGE
-        fi
+        apt-get install -y --reinstall /tmp/$XRT_PACKAGE
+    elif [[ "$OSVERSION" == "centos-7" ]] ; then
+        yum remove -y xrt
+        yum install -y epel-release
+        yum install -y /tmp/$XRT_PACKAGE
+    elif [[ "$OSVERSION" == "centos-8" ]]; then
+        yum remove -y xrt
+        yum config-manager --set-enabled PowerTools
+        yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        yum config-manager --set-enabled AppStream
+        yum install -y /tmp/$XRT_PACKAGE
     fi
     rm /tmp/$XRT_PACKAGE
 }
@@ -126,7 +125,7 @@ install_xrt() {
 check_packages() {
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
         PACKAGE_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
-    elif [[ "$OSVERSION" == "centos" ]]; then
+    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
         PACKAGE_INSTALL_INFO=`yum list installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
     fi
 }
@@ -141,15 +140,20 @@ flash_cards() {
     if [[ $? != 0 ]]; then
         echo "Download Shell package"
         wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
-
+        if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
+            echo "Untar the package. "
+            tar xzvf /tmp/$SHELL_PACKAGE -C /tmp/
+            rm /tmp/$SHELL_PACKAGE
+        fi
         echo "Install Shell"
         if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-            apt-get install /tmp/$SHELL_PACKAGE
-        elif [[ "$OSVERSION" == "centos" ]]; then
+            apt-get install -y /tmp/xilinx*
+        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
             yum remove -y $PACKAGE_NAME
-            yum install /tmp/$SHELL_PACKAGE
+            yum install -y /tmp/xilinx*
         fi
-        rm /tmp/$SHELL_PACKAGE
+        rm /tmp/xilinx*
+        if [[ -f /tmp/$SHELL_PACKAGE ]]; then rm /tmp/$SHELL_PACKAGE; fi
     else
         echo "The package is already installed. "
     fi
@@ -159,7 +163,7 @@ flash_cards() {
         /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP 
     elif [[ "$VERSION" == "2019.1" ]]; then
         /opt/xilinx/xrt/bin/xbmgmt flash -a $DSA  $TIMESTAMP
-    elif [[ "$VERSION"  == "2019.2" || "$VERSION"  == "2020.1" ]]; then
+    else
         /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
     fi
 }
@@ -175,16 +179,16 @@ flash_cards_u50() {
         tar -zxvf /tmp/$SHELL_TARBALL -C /tmp
         echo "Install Shell"
         if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-            apt-get install --reinstall /tmp/$CMC_PACKAGE
-            apt-get install --reinstall /tmp/$SC_PACKAGE
-            apt-get install --reinstall /tmp/$SHELL_PACKAGE
-        elif [[ "$OSVERSION" == "centos" ]]; then
-            yum remove -y xilinx-cmc-u50 xilinx-sc-fw-u50
-            yum install /tmp/$CMC_PACKAGE
-            yum install /tmp/$SC_PACKAGE
-            yum install /tmp/$SHELL_PACKAGE
+            apt-get install -y --reinstall /tmp/$CMC_PACKAGE
+            apt-get install -y --reinstall /tmp/$SC_PACKAGE
+            apt-get install -y --reinstall /tmp/$SHELL_PACKAGE
+        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
+            yum remove -y xilinx-cmc-u50 xilinx-sc-fw-u50 $PACKAGE_NAME
+            yum install -y /tmp/$CMC_PACKAGE
+            yum install -y /tmp/$SC_PACKAGE
+            yum install -y /tmp/$SHELL_PACKAGE
         fi
-        rm /tmp/$SHELL_PACKAGE /tmp/$CMC_PACKAGE /tmp/$SC_PACKAGE /tmp/$SHELL_PACKAGE
+        rm /tmp/$SHELL_PACKAGE /tmp/$CMC_PACKAGE /tmp/$SC_PACKAGE /tmp/$SHELL_TARBALL
     else
         echo "The package is already installed. "
     fi
@@ -202,7 +206,7 @@ detect_cards() {
     if [ $? != 0 ] ; then
         if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
             apt-get install -y pciutils
-        elif [[ "$OSVERSION" == "centos" ]]; then
+        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y pciutils
         fi
     fi
@@ -270,17 +274,15 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 
 OSVERSION=`grep '^ID=' /etc/os-release | awk -F= '{print $2}'`
 OSVERSION=`echo $OSVERSION | tr -d '"'`
-if [[ "$OSVERSION" == "ubuntu" ]]; then
-    VERSION_ID=`grep '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}'`
-    VERSION_ID=`echo $VERSION_ID | tr -d '"'`
-    OSVERSION="$OSVERSION-$VERSION_ID"
-fi
+VERSION_ID=`grep '^VERSION_ID=' /etc/os-release | awk -F= '{print $2}'`
+VERSION_ID=`echo $VERSION_ID | tr -d '"'`
+OSVERSION="$OSVERSION-$VERSION_ID"
 
 wget --help > /dev/null
 if [ $? != 0 ] ; then
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
         apt-get install -y wget
-    elif [[ "$OSVERSION" == "centos" ]]; then
+    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
         yum install -y wget
     fi
 fi
