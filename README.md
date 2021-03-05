@@ -48,6 +48,7 @@ The figure below shows how installing XRT and platform is done. With the specifi
 * [Alveo U200](https://www.xilinx.com/products/boards-and-kits/alveo/u200.html#gettingStarted)
 * [Alveo U250](https://www.xilinx.com/products/boards-and-kits/alveo/u250.html#gettingStarted)
 * [Alveo U280](https://www.xilinx.com/products/boards-and-kits/alveo/u280.html#gettingStarted)
+* [Alveo U50](https://www.xilinx.com/products/boards-and-kits/alveo/u50.html#gettingStarted)
 
 
 ![Install XRT and Shell](doc/install_xrt_shell.png)
