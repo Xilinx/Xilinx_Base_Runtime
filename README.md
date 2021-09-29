@@ -1,13 +1,15 @@
 # Release Notes
 
 ## Version 2021.1
-FOR XILINX INTERNAL USE ONLY
+Public Docker Image Repositories
 
-Please use the build.sh as shown below which will grab the daily XRT and XRM packages and build a docker image.
-```
-user@machine:~$ cd Xilinx_Base_Runtime/Dockerfiles/<Version>/
-user@machine:~$ ./build.sh
-```
+    AL2: xilinx/xilinx_runtime_base:alveo-2021.1-al2
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2021.1-centos-7
+    CentOS-8: xilinx/xilinx_runtime_base:alveo-2021.1-centos-8
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-16:04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-18:04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-20:04
+
 ## Version 2020.2
 Public Docker Image Repositories
 
@@ -124,8 +126,24 @@ root@machine:~$ cd Xilinx_Base_Runtime
 root@machine:~$ ./host_setup.sh -v 2019.1 
 ```
 
-5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine after installation completed to load the new image on FPGA.
+5. During host_setup.sh runtime, you will be prompted with [Y/N] to continue. These prompts are designed to help the user to have more customizability when setting up machines.
 
+    E.g. You will be prompted to see whether you want to have multiple XRT versions.
+
+    Please Note: If you choose to flash the FPGA devices on your machine, you will need to cold reboot the local machine after installation is completed to load the new image on     FPGA.
+
+## Multiple XRT Support
+Xilinx provides both the docker images and the Dockerfiles used to create these docker images which come pre-installed with multiple XRT Versions and XRM. The docker images can be found from the public Xilinx Dockerhub in the links listed above. 
+
+In these docker images, the latest (highest version number) XRT version will be symbol linked to /opt/xilinx/xrt_versions/xrt
+You may also run the following command to automatically source the XRT version closest to the version present on your machine:
+```
+source /opt/Xilinx/xrt/auto_setup.sh
+```
+If you would like to select a different XRT version, please run the following command:
+```
+source /opt/Xilinx/xrt_versions/{target_xrt_version}/setup.sh
+```
 
 ## Run Base Docker Image
 
