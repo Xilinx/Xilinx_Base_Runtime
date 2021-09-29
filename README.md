@@ -1,3 +1,53 @@
+# Release Notes
+
+## Version 2021.1
+FOR XILINX INTERNAL USE ONLY
+
+Please use the build.sh as shown below which will grab the daily XRT and XRM packages and build a docker image.
+```
+user@machine:~$ cd Xilinx_Base_Runtime/Dockerfiles/<Version>/
+user@machine:~$ ./build.sh
+```
+## Version 2020.2
+Public Docker Image Repositories
+
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2020.2-centos-7
+    CentOS-8: xilinx/xilinx_runtime_base:alveo-2020.2-centos-8
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-16:04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-18:04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-20:04
+
+## Version 2020.1
+Public Docker Image Repositories
+
+    CentOS: xilinx/xilinx_runtime_base:alveo-2020.1-centos
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2020.1-ubuntu-16:04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2020.1-ubuntu-18:04
+
+## Version 2019.2
+Public Docker Image Repositories
+
+    CentOS: xilinx/xilinx_runtime_base:alveo-2019.2-centos
+    CentOS-u50: xilinx/xilinx_runtime_base:alveo-2019.2-centos-u50
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2019.2-ubuntu-16.04
+    Ubuntu-16.04-u50: xilinx/xilinx_runtime_base:alveo-2019.2-ubuntu-16.04-u50
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2019.2-ubuntu-18.04
+    Ubuntu-18.04-u50: xilinx/xilinx_runtime_base:alveo-2019.2-ubuntu-18.04-u50
+
+## Version 2019.1
+Public Docker Image Repositories
+
+    CentOS: xilinx/xilinx_runtime_base:alveo-2019.1-centos
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2019.1-ubuntu-16:04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2019.1-ubuntu-18:04
+
+## Version 2018.3
+Public Docker Image Repositories
+
+    CentOS: xilinx/xilinx_runtime_base:alveo-2018.3-centos
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2018.3-ubuntu-16:04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2018.3-ubuntu-18:04
+
 # Xilinx Runtime Base Image Deployment Docker Solution
 
 This project maintains unified Docker images with XRT (Xilinx runtime) preinstalled and provides scripts to setup and flash the Alveo cards.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# (C) Copyright 2019, Xilinx, Inc.
+# (C) Copyright 2021, Xilinx, Inc.
 #
 #!/usr/bin/env bash
 
@@ -30,16 +30,21 @@ list() {
     echo "Alveo U200 / U250 / U280           2019.1       CentOS 7"
     echo "Alveo U200 / U250 / U280           2019.1       Ubuntu 16.04"
     echo "Alveo U200 / U250 / U280           2019.1       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280 /u50      2019.2       CentOS 7"
-    echo "Alveo U200 / U250 / U280 /u50      2019.2       Ubuntu 16.04"
-    echo "Alveo U200 / U250 / U280 /u50      2019.2       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280 /u50      2020.1       CentOS 7"
-    echo "Alveo U200 / U250 / U280 /u50      2020.1       Ubuntu 16.04"
-    echo "Alveo U200 / U250 / U280 /u50      2020.1       Ubuntu 18.04"
-    echo "Alveo U200 / U250 / U280 /u50      2020.2       CentOS 7"
-    echo "Alveo U200 / U250 / U280 /u50      2020.2       CentOS 8"
-    echo "Alveo U200 / U250 / U280 /u50      2020.2       Ubuntu 16.04"
-    echo "Alveo U200 / U250 / U280 /u50      2020.2       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 / U50     2019.2       CentOS 7"
+    echo "Alveo U200 / U250 / U280 / U50     2019.2       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 / U50     2019.2       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 / U50     2020.1       CentOS 7"
+    echo "Alveo U200 / U250 / U280 / U50     2020.1       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 / U50     2020.1       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 / U50     2020.2       CentOS 7"
+    echo "Alveo U200 / U250 / U280 / U50     2020.2       CentOS 8"
+    echo "Alveo U200 / U250 / U280 / U50     2020.2       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 / U50     2020.2       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 / U50     2021.1       CentOS 7"
+    echo "Alveo U200 / U250 / U280 / U50     2021.1       CentOS 8"
+    echo "Alveo U200 / U250 / U280 / U50     2021.1       Ubuntu 16.04"
+    echo "Alveo U200 / U250 / U280 / U50     2021.1       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U50            2021.1       Ubuntu 20.04"
 }
 
 vercomp () {
@@ -101,23 +106,58 @@ install_xrt() {
     echo "Download XRT installation package"
     wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
 
-    echo "Install XRT"
-    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-        apt update
-        apt install -y python3-pip
-        pip3 install --upgrade pip
-        pip3 install pyopencl==2020.1
-        apt-get install -y --reinstall /tmp/$XRT_PACKAGE
-    elif [[ "$OSVERSION" == "centos-7" ]] ; then
-        yum remove -y xrt
-        yum install -y epel-release
-        yum install -y /tmp/$XRT_PACKAGE
-    elif [[ "$OSVERSION" == "centos-8" ]]; then
-        yum remove -y xrt
-        yum config-manager --set-enabled PowerTools
-        yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-        yum config-manager --set-enabled AppStream
-        yum install -y /tmp/$XRT_PACKAGE
+    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+        dpkg -s xrt > /dev/null 2>&1
+        if [[ $? == 0 ]]; then
+            CURRENT_XRT_VERSION=`dpkg -s xrt | grep Version | cut -d' ' -f 2`
+            if [[ "$CURRENT_XRT_VERSION" != "$XRT_VERSION" ]]; then
+                while true; do
+                    read -p "REMOVE PREVIOUS XRT? (Y/N)" yn # Prompt user with which version will be removed
+                    case $yn in
+                        [Yy]* ) remove_xrt; break;;
+                        [Nn]* ) multiple_xrt; break;;
+                        * ) echo "Please answer Y or N";;
+                    esac
+                done
+            else
+                echo "You already have this version of XRT installed"
+                return
+            fi
+        else
+            apt update
+            apt install -y python3-pip
+            pip3 install --upgrade pip
+            pip3 install pyopencl==2020.1
+            apt-get install -y --reinstall /tmp/$XRT_PACKAGE
+        fi
+    elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
+        rpm -q xrt > /dev/null 2>&1
+        if [[ $? == 0 ]]; then
+            CURRENT_XRT_VERSION=`rpm -q xrt | cut -d'-' -f 2`
+            if [[ "$CURRENT_XRT_VERSION" != "$XRT_VERSION" ]]; then
+                while true; do
+                    read -p "REMOVE PREVIOUS XRT? (Y/N)" yn # Prompt user with which version will be removed
+                    case $yn in
+                        [Yy]* ) remove_xrt; break;;
+                        [Nn]* ) multiple_xrt; break;;
+                        * ) echo "Please answer Y or N";;
+                    esac
+                done
+            else
+                echo "You already have this version of XRT installed"
+                return
+            fi
+        else
+            if [[ "$OSVERSION" == "centos-7" ]] ; then
+                yum install -y epel-release
+                yum install -y /tmp/$XRT_PACKAGE
+            elif [[ "$OSVERSION" == "centos-8" ]]; then
+                yum config-manager --set-enabled PowerTools
+                yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+                yum config-manager --set-enabled AppStream
+                yum install -y /tmp/$XRT_PACKAGE
+            fi
+        fi
     fi
     rm /tmp/$XRT_PACKAGE
 }
@@ -130,10 +170,104 @@ check_packages() {
     fi
 }
 
+remove_xrt() {
+    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [["$OSVERSION" == "ubuntu-20.04"]]; then
+        while true; do
+            read -p "REMOVE XRT WITH DEPENDENCIES? (Y/N)" yn
+            case $yn in
+                [Yy]* ) dpkg -r xrt; break;;
+                [Nn]* ) dpkg -r --force-depends xrt; break;;
+                * ) echo "Please answer Y or N";;
+            esac
+        done
+    elif [[ "$OSVERSION" == "centos-7" ]]; then
+        while true; do
+            read -p "REMOVE XRT WITH DEPENDENCIES? (Y/N)" yn
+            case $yn in
+                [Yy]* ) yum remove xrt; break;;
+                [Nn]* ) rpm -e --nodeps xrt; break;;
+                * ) echo "Please answer Y or N";;
+            esac
+        done
+    elif [[ "$OSVERSION" == "centos-8" ]]; then
+        while true; do
+            read -p "REMOVE XRT WITH DEPENDENCIES? (Y/N)" yn
+            case $yn in
+                [Yy]* ) yum remove xrt; break;;
+                [Nn]* ) yum remove --notautoremove xrt; break;;
+                * ) echo "Please answer Y or N";;
+            esac
+        done
+    fi
+}
+
+multiple_xrt() {
+    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+        while true; do
+            read -p "MULTIPLE XRT VERSIONS WILL EXIST ON YOUR SYSTEM. PROCEED? (Y/N)" yn
+            case $yn in
+                [Yy]* ) mv /opt/xilinx/xrt/ /opt/xilinx/xrt_${CURRENT_XRT_VERSION}; # Add what will be the result if they choose yes
+                        apt update; # Old XRT version has been renamed, new XRT version is now default
+                        apt install -y python3-pip;
+                        pip3 install --upgrade pip;
+                        pip3 install pyopencl==2020.1;
+                        version_compare_install
+                        return;;
+                [Nn]* ) return;;
+                * ) echo "Please answer Y or N";;
+            esac
+        done
+    elif [[ "$OSVERSION" == "centos-7" ]]; then
+        while true; do
+            read -p "MULTIPLE XRT VERSIONS WILL EXIST ON YOUR SYSTEM. PROCEED? (Y/N)" yn
+            case $yn in
+                [Yy]* ) mv /opt/xilinx/xrt/ /opt/xilinx/xrt_${CURRENT_XRT_VERSION};
+                        yum install -y epel-release
+                        version_compare_install
+                        return;;
+                [Nn]* ) return;;
+                * ) echo "Please answer Y or N";;
+            esac
+        done
+    elif [[ "$OSVERSION" == "centos-8" ]]; then
+        while true; do
+            read -p "MULTIPLE XRT VERSIONS WILL EXIST ON YOUR SYSTEM. PROCEED? (Y/N)" yn
+            case $yn in
+                [Yy]* ) mv /opt/xilinx/xrt/ /opt/xilinx/xrt_${CURRENT_XRT_VERSION};
+                        yum config-manager --set-enabled PowerTools
+                        yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+                        yum config-manager --set-enabled AppStream
+                        version_compare_install
+                        return;;
+                [Nn]* ) return;;
+                * ) echo "Please answer Y or N";;
+            esac
+        done
+    fi
+}
+
+version_compare_install() {
+    CURRENT_XRT_VERSION_COMP=`$CURRENT_XRT_VERSION | tr -d .`
+    XRT_VERSION_COMP=`$XRT_VERSION | tr -d .`
+    if [[ "$OSVERSION" == "centos-7" || "$OSVERSION" == "centos-8" ]]; then
+        if [[ "$CURRENT_XRT_VERSION_COMP" < "$XRT_VERSION_COMP" ]]; then
+            yum install -y /tmp/$XRT_PACKAGE
+        elif [[ "$CURRENT_XRT_VERSION_COMP" > "$XRT_VERSION_COMP" ]]; then
+            yum downgrade -y /tmp/$XRT_PACKAGE
+        fi
+    elif [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
+        if [[ "$CURRENT_XRT_VERSION_COMP" < "$XRT_VERSION_COMP" ]]; then
+            apt-get install -y /tmp/$XRT_PACKAGE
+        elif [[ "$CURRENT_XRT_VERSION_COMP" > "$XRT_VERSION_COMP" ]]; then
+            apt-get --allow-downgrades install -y /tmp/$XRT_PACKAGE
+        fi
+    fi
+}
+
 flash_cards() {
     if [[ "$PLATFORM" == "alveo-u50" ]]; then
         flash_cards_u50
-        return 
+        return
     fi
     get_packages
     check_packages
@@ -146,10 +280,11 @@ flash_cards() {
             rm /tmp/$SHELL_PACKAGE
         fi
         echo "Install Shell"
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
             apt-get install -y /tmp/xilinx*
-        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
-            yum remove -y $PACKAGE_NAME
+        elif [[ "$OSVERSION" == "centos-7" ]]; then
+            yum install -y /tmp/xilinx*
+        elif [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y /tmp/xilinx*
         fi
         rm /tmp/xilinx*
@@ -157,10 +292,10 @@ flash_cards() {
     else
         echo "The package is already installed. "
     fi
-    
+
     echo "Flash Card(s). "
     if [[ "$VERSION" == "2018.3" ]]; then
-        /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP 
+        /opt/xilinx/xrt/bin/xbutil flash -a $DSA  $TIMESTAMP
     elif [[ "$VERSION" == "2019.1" ]]; then
         /opt/xilinx/xrt/bin/xbmgmt flash -a $DSA  $TIMESTAMP
     else
@@ -178,12 +313,15 @@ flash_cards_u50() {
         # Unpack tarball
         tar -zxvf /tmp/$SHELL_TARBALL -C /tmp
         echo "Install Shell"
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
-            apt-get install -y --reinstall /tmp/$CMC_PACKAGE
-            apt-get install -y --reinstall /tmp/$SC_PACKAGE
-            apt-get install -y --reinstall /tmp/$SHELL_PACKAGE
-        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
-            yum remove -y xilinx-cmc-u50 xilinx-sc-fw-u50 $PACKAGE_NAME
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [["$OSVERSION" == "ubuntu-20.04"]]; then
+            apt-get install -y /tmp/$CMC_PACKAGE
+            apt-get install -y /tmp/$SC_PACKAGE
+            apt-get install -y /tmp/$SHELL_PACKAGE
+        elif [[ "$OSVERSION" == "centos-7" ]]; then
+            yum install -y /tmp/$CMC_PACKAGE
+            yum install -y /tmp/$SC_PACKAGE
+            yum install -y /tmp/$SHELL_PACKAGE
+        elif [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y /tmp/$CMC_PACKAGE
             yum install -y /tmp/$SC_PACKAGE
             yum install -y /tmp/$SHELL_PACKAGE
@@ -197,6 +335,30 @@ flash_cards_u50() {
     /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
 }
 
+check_current_shell_version() {
+    source /opt/xilinx/xrt/setup.sh
+    xbutil scan
+    if [[ $? == 0 ]]; then
+        CURR_SHELL=`xbutil scan | grep xilinx | cut -d'_' -f 4 | sed -n 1p`
+        SHELL_PACKAGE_CHECK=`${SHELL_PACKAGE} | cut -d'-' -f 4`
+        if [[ CURR_SHELL != SHELL_PACKAGE_CHECK ]]; then
+            while true; do
+                read -p "REMOVE EXISTING SHELL AND FLASH NEW SHELL? (Y/N)" yn # Prompt user with shell version
+                case $yn in
+                    [Yy]* ) flash_cards;
+                            return;;
+                    [Nn]* ) return;;
+                    * ) echo "Please answer Y or N";;
+                esac
+            done
+        else
+            return
+        fi
+    else
+        flash_cards
+    fi
+}
+
 notice_disclaimer() {
     cat doc/notice_disclaimer.txt
 }
@@ -204,7 +366,7 @@ notice_disclaimer() {
 detect_cards() {
     lspci > /dev/null
     if [ $? != 0 ] ; then
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
             apt-get install -y pciutils
         elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y pciutils
@@ -225,10 +387,9 @@ detect_cards() {
 }
 
 confirm() {
-    # call with a prompt string or use a default
     read -r -p "${1:-Are you sure you wish to proceed? [y/n]:} " response
     case "$response" in
-        [yY][eE][sS]|[yY]) 
+        [yY][eE][sS]|[yY])
             true
             ;;
         *)
@@ -238,7 +399,7 @@ confirm() {
 }
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
+   echo "This script must be run as root"
    exit 1
 fi
 
@@ -254,7 +415,7 @@ U280=0
 U50=0
 
 notice_disclaimer
-confirm 
+confirm
 
 while true
 do
@@ -280,7 +441,7 @@ OSVERSION="$OSVERSION-$VERSION_ID"
 
 wget --help > /dev/null
 if [ $? != 0 ] ; then
-    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [["$OSVERSION" == "ubuntu-20.04"]]; then
         apt-get install -y wget
     elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
         yum install -y wget
@@ -314,12 +475,10 @@ if [[ "$XRT" == 1 ]]; then
 fi
 
 if [[ "$SHELL" == 1 ]]; then
-
     if [[ "$U200" == 0 && "$U250" == 0 && "$U280" == 0 && "$U50" == 0 ]]; then
         echo "[WARNING] No FPGA Board Detected. Skip shell flash."
         exit 0;
     fi
-
     if [[ "$PLATFORM_ONLY" != "NONE" ]]; then
         PF=`echo $PLATFORM_ONLY | awk -F'-' '{print $2}' | awk '{print toupper($0)}'`
         if [[ "$(($PF))" == 0 ]]; then
@@ -329,17 +488,15 @@ if [[ "$SHELL" == 1 ]]; then
         echo "You have $(($PF)) $PF card(s). "
         PLATFORM=`echo $PLATFORM_ONLY`
         # echo $PLATFORM
-        flash_cards
+        check_current_shell_version
     else
         for PF in U200 U250 U280 U50; do
             if [[ "$(($PF))" != 0 ]]; then
                 echo "You have $(($PF)) $PF card(s). "
                 PLATFORM=`echo "alveo-$PF" | awk '{print tolower($0)}'`
                 # echo $PLATFORM
-                flash_cards
+                check_current_shell_version
             fi
         done
     fi
-    
 fi
-
