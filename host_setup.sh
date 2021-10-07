@@ -112,7 +112,7 @@ install_xrt() {
             CURRENT_XRT_VERSION=`dpkg -s xrt | grep Version | cut -d' ' -f 2`
             if [[ "$CURRENT_XRT_VERSION" != "$XRT_VERSION" ]]; then
                 while true; do
-                    read -p "REMOVE PREVIOUS XRT? (Y/N)" yn # Prompt user with which version will be removed
+                    read -p "Current XRT Version: $CURRENT_XRT_VERSION. REMOVE PREVIOUS XRT? (Y/N)" yn # Prompt user with which version will be removed
                     case $yn in
                         [Yy]* ) remove_xrt; break;;
                         [Nn]* ) multiple_xrt; break;;
@@ -136,7 +136,7 @@ install_xrt() {
             CURRENT_XRT_VERSION=`rpm -q xrt | cut -d'-' -f 2`
             if [[ "$CURRENT_XRT_VERSION" != "$XRT_VERSION" ]]; then
                 while true; do
-                    read -p "REMOVE PREVIOUS XRT? (Y/N)" yn # Prompt user with which version will be removed
+                    read -p "Current XRT Version: $CURRENT_XRT_VERSION. REMOVE PREVIOUS XRT? (Y/N)" yn # Prompt user with which version will be removed
                     case $yn in
                         [Yy]* ) remove_xrt; break;;
                         [Nn]* ) multiple_xrt; break;;
@@ -163,7 +163,7 @@ install_xrt() {
 }
 
 check_packages() {
-    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]]; then
+    if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
         PACKAGE_INSTALL_INFO=`apt list --installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
     elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
         PACKAGE_INSTALL_INFO=`yum list installed 2>/dev/null | grep "$PACKAGE_NAME" | grep "$PACKAGE_VERSION"`
@@ -180,6 +180,7 @@ remove_xrt() {
                 * ) echo "Please answer Y or N";;
             esac
         done
+        apt-get install -y /tmp/$XRT_PACKAGE
     elif [[ "$OSVERSION" == "centos-7" ]]; then
         while true; do
             read -p "REMOVE XRT WITH DEPENDENCIES? (Y/N)" yn
@@ -189,6 +190,7 @@ remove_xrt() {
                 * ) echo "Please answer Y or N";;
             esac
         done
+        yum install -y /tmp/$XRT_PACKAGE
     elif [[ "$OSVERSION" == "centos-8" ]]; then
         while true; do
             read -p "REMOVE XRT WITH DEPENDENCIES? (Y/N)" yn
@@ -198,6 +200,7 @@ remove_xrt() {
                 * ) echo "Please answer Y or N";;
             esac
         done
+        yum install -y /tmp/$XRT_PACKAGE
     fi
 }
 
@@ -211,6 +214,7 @@ multiple_xrt() {
                         apt install -y python3-pip;
                         pip3 install --upgrade pip;
                         pip3 install pyopencl==2020.1;
+                        echo "Install XRT Version: $XRT_PACKAGE";
                         version_compare_install
                         return;;
                 [Nn]* ) return;;
@@ -339,9 +343,8 @@ check_current_shell_version() {
     source /opt/xilinx/xrt/setup.sh
     xbutil scan
     if [[ $? == 0 ]]; then
-        CURR_SHELL=`xbutil scan | grep xilinx | cut -d'_' -f 4 | sed -n 1p`
-        SHELL_PACKAGE_CHECK=`${SHELL_PACKAGE} | cut -d'-' -f 4`
-        if [[ CURR_SHELL != SHELL_PACKAGE_CHECK ]]; then
+        CURR_SHELL=`xbutil scan | grep xilinx | cut -d' ' -f 4 | sed -n 1p | cut -d'(' -f 1`
+        if [[ "$CURR_SHELL" != "$DSA" ]]; then
             while true; do
                 read -p "REMOVE EXISTING SHELL AND FLASH NEW SHELL? (Y/N)" yn # Prompt user with shell version
                 case $yn in
