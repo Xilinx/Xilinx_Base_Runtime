@@ -94,6 +94,13 @@ get_packages() {
             SC_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $10}' | awk -F= '{print $2}'`
             SHELL_TARBALL=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $11}' | awk -F= '{print $2}'`
         fi
+        if [[ "$PLATFORM" == "alveo-u250" ]]; then
+            CMC_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $9}' | awk -F= '{print $2}'`
+            SC_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $10}' | awk -F= '{print $2}'`
+            SHELL_TARBALL=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $11}' | awk -F= '{print $2}'`
+            VALIDATE_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $12}' | awk -F= '{print $2}'`
+            2RP_SHELL_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $13}' | awk -F= '{print $2}'`
+        fi
     else
         usage
         echo ""
@@ -120,7 +127,7 @@ install_xrt() {
                     esac
                 done
             else
-                echo "You already have this version of XRT installed"
+                echo "You already have this version of XRT ($XRT_VERSION) installed"
                 return
             fi
         else
@@ -144,7 +151,7 @@ install_xrt() {
                     esac
                 done
             else
-                echo "You already have this version of XRT installed"
+                echo "You already have this version of XRT ($XRT_VERSION) installed"
                 return
             fi
         else
@@ -273,10 +280,14 @@ flash_cards() {
         flash_cards_u50
         return
     fi
+    if [[ "$PLATFORM" == "alveo-u250" ]]; then
+        flash_cards_u250
+        return
+    fi
     get_packages
     check_packages
     if [[ $? != 0 ]]; then
-        echo "Download Shell package"
+        echo "Downloading Shell Package"
         wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
         if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
             echo "Untar the package. "
@@ -286,9 +297,7 @@ flash_cards() {
         echo "Install Shell"
         if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
             apt-get install -y /tmp/xilinx*
-        elif [[ "$OSVERSION" == "centos-7" ]]; then
-            yum install -y /tmp/xilinx*
-        elif [[ "$OSVERSION" == "centos-8" ]]; then
+        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y /tmp/xilinx*
         fi
         rm /tmp/xilinx*
@@ -311,7 +320,7 @@ flash_cards_u50() {
     get_packages
     check_packages
     if [[ $? != 0 ]]; then
-        echo "Download Shell package"
+        echo "Downloading Shell Tar File"
         wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
 
         # Unpack tarball
@@ -321,14 +330,42 @@ flash_cards_u50() {
             apt-get install -y /tmp/$CMC_PACKAGE
             apt-get install -y /tmp/$SC_PACKAGE
             apt-get install -y /tmp/$SHELL_PACKAGE
-        elif [[ "$OSVERSION" == "centos-7" ]]; then
+        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y /tmp/$CMC_PACKAGE
             yum install -y /tmp/$SC_PACKAGE
             yum install -y /tmp/$SHELL_PACKAGE
-        elif [[ "$OSVERSION" == "centos-8" ]]; then
+        fi
+        rm /tmp/$SHELL_PACKAGE /tmp/$CMC_PACKAGE /tmp/$SC_PACKAGE /tmp/$SHELL_TARBALL
+    else
+        echo "The package is already installed. "
+    fi
+
+    echo "Flash Card(s). "
+    /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
+}
+
+flash_cards_u250() {
+    get_packages
+    check_packages
+    if [[ $? != 0 ]]; then
+        echo "Downloading Shell Tar File"
+        wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
+
+        # Unpack tarball
+        tar -zxvf /tmp/$SHELL_TARBALL -C /tmp
+        echo "Install Shell"
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [["$OSVERSION" == "ubuntu-20.04"]]; then
+            apt-get install -y /tmp/$CMC_PACKAGE
+            apt-get install -y /tmp/$SC_PACKAGE
+            apt-get install -y /tmp/$SHELL_PACKAGE
+            apt-get install -y /tmp/$VALIDATE_PACKAGE
+            apt-get install -y /tmp/$2RP_SHELL_PACKAGE
+        elif [[ "$OSVERSION" == "centos-7" ]] || [[ "$OSVERSION" == "centos-8" ]]; then
             yum install -y /tmp/$CMC_PACKAGE
             yum install -y /tmp/$SC_PACKAGE
             yum install -y /tmp/$SHELL_PACKAGE
+            yum install -y /tmp/$VALIDATE_PACKAGE
+            yum install -y /tmp/$2RP_SHELL_PACKAGE
         fi
         rm /tmp/$SHELL_PACKAGE /tmp/$CMC_PACKAGE /tmp/$SC_PACKAGE /tmp/$SHELL_TARBALL
     else
@@ -343,10 +380,12 @@ check_current_shell_version() {
     source /opt/xilinx/xrt/setup.sh
     xbutil scan
     if [[ $? == 0 ]]; then
-        CURR_SHELL=`xbutil scan | grep xilinx | cut -d' ' -f 4 | sed -n 1p | cut -d'(' -f 1`
+        CARD_COUNT=$CARD_NO$P
+        CURR_SHELL=`xbutil scan | grep xilinx | cut -d' ' -f 4 | sed -n $CARD_COUNT | cut -d'(' -f 1`
+        CARD_NO=$((CARD_NO+1))
         if [[ "$CURR_SHELL" != "$DSA" ]]; then
             while true; do
-                read -p "REMOVE EXISTING SHELL AND FLASH NEW SHELL? (Y/N)" yn # Prompt user with shell version
+                read -p "FLASH NEW SHELL? (Y/N)" yn # Prompt user with shell version
                 case $yn in
                     [Yy]* ) flash_cards;
                             return;;
@@ -416,6 +455,8 @@ U200=0
 U250=0
 U280=0
 U50=0
+CARD_NO=1
+P=p
 
 notice_disclaimer
 confirm
