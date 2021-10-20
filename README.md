@@ -9,7 +9,7 @@ Public Docker Image Repositories
     Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-16:04
     Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-18:04
     Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-20:04
-
+    
 ## Version 2020.2
 Public Docker Image Repositories
 
@@ -126,24 +126,8 @@ root@machine:~$ cd Xilinx_Base_Runtime
 root@machine:~$ ./host_setup.sh -v 2019.1 
 ```
 
-5. During host_setup.sh runtime, you will be prompted with [Y/N] to continue. These prompts are designed to help the user to have more customizability when setting up machines.
+5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine after installation completed to load the new image on FPGA.
 
-    E.g. You will be prompted to see whether you want to have multiple XRT versions.
-
-    Please Note: If you choose to flash the FPGA devices on your machine, you will need to cold reboot the local machine after installation is completed to load the new image on     FPGA.
-
-## Multiple XRT Support
-Xilinx provides both the docker images and the Dockerfiles used to create these docker images which come pre-installed with multiple XRT Versions and XRM. The docker images can be found from the public Xilinx Dockerhub in the links listed above. 
-
-In these docker images, the latest (highest version number) XRT version will be symbol linked to /opt/xilinx/xrt_versions/xrt
-You may also run the following command to automatically source the XRT version closest to the version present on your machine:
-```
-source /opt/Xilinx/xrt/auto_setup.sh
-```
-If you would like to select a different XRT version, please run the following command:
-```
-source /opt/Xilinx/xrt_versions/{target_xrt_version}/setup.sh
-```
 
 ## Run Base Docker Image
 
@@ -178,7 +162,6 @@ root@fc33db3f6ed6:/$ /opt/xilinx/xrt/bin/xbutil list
 root@fc33db3f6ed6:/$ /opt/xilinx/xrt/bin/xbutil dmatest
 ```
 
-
 ## Build docker application by using base image
 All the docker images provided by this project can be used as base images for building your own docker applications because they all have XRT and dependencies installed. Here is an simple example of Dockerfile.
 
@@ -195,6 +178,20 @@ COPY [xclbin_file] [path_of_xclbin_file]
 ```
 
 Then you can use `docker build -t [tag] -f [Dockerfile]` to build your own docker application. 
+
+## xbutil validate 
+If the user would like to run `xbutil validate` within the provided docker images, they will need to manually install the related shell packages for the specified card type. These packages can be found in the image directory `/opt/xilinx/shell/`.
+The user will need to install a cmc package, sc-fw package, base package, and validate package.
+    In the scenario where shell package is available, please install the shell package as well.
+
+Example case in u250 card:
+```
+apt install ./xilinx-cmc-u200-u250_1.2.15-2.3186334_all.deb 
+apt install ./xilinx-sc-fw-u200-u250_4.6.11-2.0766885_all.deb
+apt install ./xilinx-u250-gen3x16-xdma-validate_3.1-3061241_all.deb
+apt install ./xilinx-u250-gen3x16-xdma-shell_3.1-3063142_all.deb
+apt install ./xilinx-u250-gen3x16-base_3-3060459_all.deb
+```
 
 ## FAQ
 1. Why should I install XRT on host if XRT is already installed inside container?
