@@ -100,6 +100,7 @@ get_packages() {
             SHELL_TARBALL=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $11}' | awk -F= '{print $2}'`
             VALIDATE_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $12}' | awk -F= '{print $2}'`
             2RP_SHELL_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $13}' | awk -F= '{print $2}'`
+            FLASH_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $14}' | awk -F= '{print $2}'`
         fi
     else
         usage
@@ -110,8 +111,8 @@ get_packages() {
 }
 
 install_xrt() {
-    echo "Download XRT installation package"
-    wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
+    echo "Downloading XRT installation package"
+    wget -q -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRT_PACKAGE" > /tmp/$XRT_PACKAGE
 
     if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
         dpkg -s xrt > /dev/null 2>&1
@@ -288,7 +289,7 @@ flash_cards() {
     check_packages
     if [[ $? != 0 ]]; then
         echo "Downloading Shell Package"
-        wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
+        wget -q -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
         if [[ $SHELL_PACKAGE == *.tar.gz ]]; then
             echo "Untar the package. "
             tar xzvf /tmp/$SHELL_PACKAGE -C /tmp/
@@ -321,12 +322,12 @@ flash_cards_u50() {
     check_packages
     if [[ $? != 0 ]]; then
         echo "Downloading Shell Tar File"
-        wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
+        wget -q -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
 
         # Unpack tarball
         tar -zxvf /tmp/$SHELL_TARBALL -C /tmp
         echo "Install Shell"
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [["$OSVERSION" == "ubuntu-20.04"]]; then
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
             apt-get install -y /tmp/$CMC_PACKAGE
             apt-get install -y /tmp/$SC_PACKAGE
             apt-get install -y /tmp/$SHELL_PACKAGE
@@ -349,12 +350,12 @@ flash_cards_u250() {
     check_packages
     if [[ $? != 0 ]]; then
         echo "Downloading Shell Tar File"
-        wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
+        wget -q -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_TARBALL" > /tmp/$SHELL_TARBALL
 
         # Unpack tarball
         tar -zxvf /tmp/$SHELL_TARBALL -C /tmp
         echo "Install Shell"
-        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [["$OSVERSION" == "ubuntu-20.04"]]; then
+        if [[ "$OSVERSION" == "ubuntu-16.04" ]] || [[ "$OSVERSION" == "ubuntu-18.04" ]] || [[ "$OSVERSION" == "ubuntu-20.04" ]]; then
             apt-get install -y /tmp/$CMC_PACKAGE
             apt-get install -y /tmp/$SC_PACKAGE
             apt-get install -y /tmp/$SHELL_PACKAGE
@@ -374,11 +375,14 @@ flash_cards_u250() {
 
     echo "Flash Card(s). "
     /opt/xilinx/xrt/bin/xbmgmt flash --update --shell $DSA
+    echo "After cold reboot, please run sudo /opt/xilinx/xrt/bin/xbmgmt partition --program --name $FLASH_PACKAGE --card <BDF>"
+    echo "If you do not know your card BDF, it can be found with command sudo /opt/xilinx/xrt/bin/xbmgmt flash --scan"
+    echo "BDF is in the format of ####:##:##.#"
 }
 
 check_current_shell_version() {
-    source /opt/xilinx/xrt/setup.sh
-    xbutil scan
+    source /opt/xilinx/xrt/setup.sh > /dev/null
+    xbutil scan > /dev/null
     if [[ $? == 0 ]]; then
         CARD_COUNT=$CARD_NO$P
         CURR_SHELL=`xbutil scan | grep xilinx | cut -d' ' -f 4 | sed -n $CARD_COUNT | cut -d'(' -f 1`
@@ -429,7 +433,7 @@ detect_cards() {
 }
 
 confirm() {
-    read -r -p "${1:-Are you sure you wish to proceed? [y/n]:} " response
+    read -r -p "${1:-Do you want to proceed? [y/n]:} " response
     case "$response" in
         [yY][eE][sS]|[yY])
             true
