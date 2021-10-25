@@ -192,6 +192,10 @@ apt install ./xilinx-u250-gen3x16-xdma-validate_3.1-3061241_all.deb
 apt install ./xilinx-u250-gen3x16-xdma-shell_3.1-3063142_all.deb
 apt install ./xilinx-u250-gen3x16-base_3-3060459_all.deb
 ```
+After installing the packages, simply run xbutil validate:
+```
+xbutil validate --device <BDF>
+```
 
 ## FAQ
 1. Why should I install XRT on host if XRT is already installed inside container?
