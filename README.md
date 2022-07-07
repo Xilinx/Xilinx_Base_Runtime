@@ -1,5 +1,14 @@
 # Release Notes
 
+## Version 2021.2
+Public Docker Image Repositories
+
+    AL2: xilinx/xilinx_runtime_base:alveo-2021.2-al2
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2021.2-centos-7
+    CentOS-8: xilinx/xilinx_runtime_base:alveo-2021.2-centos-8
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-18:04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-20:04
+    
 ## Version 2021.1
 Public Docker Image Repositories
 
@@ -90,6 +99,20 @@ alveo-2019.2-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2019.2 | Ubuntu 18.
 alveo-2020.1-centos      | Alveo U200 / U250 / U280 / U50| 2020.1 | CentOS
 alveo-2020.1-ubuntu-16.04 | Alveo U200 / U250 / U280 / U50 | 2020.1 | Ubuntu 16.04
 alveo-2020.1-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2020.1 | Ubuntu 18.04
+alveo-2020.2-centos-7 | Alveo U200 / U250 / U280 / U50 | 2020.2 | CentOS 7
+alveo-2020.2-centos-8 | Alveo U200 / U250 / U280 / U50 | 2020.2 | CentOS 8
+alveo-2020.2-ubuntu-16.04 | Alveo U200 / U250 / U280 / U50 | 2020.2 | Ubuntu 16.04
+alveo-2020.2-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2020.2 | Ubuntu 18.04
+alveo-2021.1-centos-7 | Alveo U200 / U250 / U280 / U50 | 2021.1 | CentOS 7
+alveo-2021.1-centos-8 | Alveo U200 / U250 / U280 / U50 | 2021.1 | CentOS 8
+alveo-2021.1-ubuntu-16.04 | Alveo U200 / U250 / U280 / U50 | 2021.1 | Ubuntu 16.04
+alveo-2021.1-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2021.1 | Ubuntu 18.04
+alveo-2021.1-ubuntu-20.04 | Alveo U200 / U250 / U50 | 2021.1 | Ubuntu 20.04
+alveo-2021.2-centos-7 | Alveo U200 / U250 / U280 / U50 / U55c | 2021.2 | CentOS 7
+alveo-2021.2-centos-8 | Alveo U200 / U250 / U280 / U50 / U55c | 2021.2 | CentOS 8
+alveo-2021.2-ubuntu-16.04 | Alveo U280 | 2021.2 | Ubuntu 16.04
+alveo-2021.2-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 / U55c | 2021.2 | Ubuntu 18.04
+alveo-2021.2-ubuntu-20.04 | Alveo U200 / U250 / U50 / U55c | 2021.2 | Ubuntu 20.04
 
 ## Setup Host
 
@@ -128,6 +151,9 @@ root@machine:~$ ./host_setup.sh -v 2019.1
 
 5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine after installation completed to load the new image on FPGA.
 
+## U250 2RP Shell Flash
+
+Starting with the 2021.2 XRT update, the U250 card now requires a two step process for shell flashing. Due to the nature of this process, the host_setup.sh script can only accomodate the first layer shell flash before the system must undergo a cold reboot. The host_setup.sh script will prompt the user with the command to finish the second layer shell flash. 
 
 ## Run Base Docker Image
 
