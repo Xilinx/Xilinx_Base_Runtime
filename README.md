@@ -8,7 +8,7 @@ Public Docker Image Repositories
     CentOS-8: xilinx/xilinx_runtime_base:alveo-2021.2-centos-8
     Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-18:04
     Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-20:04
-    
+
 ## Version 2021.1
 Public Docker Image Repositories
 
@@ -108,11 +108,13 @@ alveo-2021.1-centos-8 | Alveo U200 / U250 / U280 / U50 | 2021.1 | CentOS 8
 alveo-2021.1-ubuntu-16.04 | Alveo U200 / U250 / U280 / U50 | 2021.1 | Ubuntu 16.04
 alveo-2021.1-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 | 2021.1 | Ubuntu 18.04
 alveo-2021.1-ubuntu-20.04 | Alveo U200 / U250 / U50 | 2021.1 | Ubuntu 20.04
-alveo-2021.2-centos-7 | Alveo U200 / U250 / U280 / U50 / U55c | 2021.2 | CentOS 7
-alveo-2021.2-centos-8 | Alveo U200 / U250 / U280 / U50 / U55c | 2021.2 | CentOS 8
-alveo-2021.2-ubuntu-16.04 | Alveo U280 | 2021.2 | Ubuntu 16.04
-alveo-2021.2-ubuntu-18.04 | Alveo U200 / U250 / U280 / U50 / U55c | 2021.2 | Ubuntu 18.04
+alveo-2021.2-centos-7 | Alveo U200 / U250 / U50 / U55c | 2021.2 | CentOS 7
+alveo-2021.2-centos-8 | Alveo U200 / U250 / U50 / U55c | 2021.2 | CentOS 8
+alveo-2021.2-ubuntu-18.04 | Alveo U200 / U250 / U50 / U55c | 2021.2 | Ubuntu 18.04
 alveo-2021.2-ubuntu-20.04 | Alveo U200 / U250 / U50 / U55c | 2021.2 | Ubuntu 20.04
+alveo-2022.1-centos-7 | Alveo U200 / U250 / U50 / U55c | 2022.1 | CentOS 7
+alveo-2022.1-ubuntu-18.04 | Alveo U200 / U250 / U50 / U55c | 2022.1 | Ubuntu 18.04
+alveo-2022.1-ubuntu-20.04 | Alveo U200 / U250 / U50 / U55c | 2022.1 | Ubuntu 20.04
 
 ## Setup Host
 
@@ -124,11 +126,13 @@ The figure below shows how installing XRT and platform is done. With the specifi
 * [Alveo U250](https://www.xilinx.com/products/boards-and-kits/alveo/u250.html#gettingStarted)
 * [Alveo U280](https://www.xilinx.com/products/boards-and-kits/alveo/u280.html#gettingStarted)
 * [Alveo U50](https://www.xilinx.com/products/boards-and-kits/alveo/u50.html#gettingStarted)
+* [Alveo U55c](https://www.xilinx.com/products/boards-and-kits/alveo/u55c.html#gettingStarted)
+
 
 
 ![Install XRT and Shell](doc/install_xrt_shell.png)
 
-### Installation Example
+## Installation Example
 1. Run host_setup.sh as root. 
 
 2. Clone repository from Xilinx GitHub
@@ -150,6 +154,42 @@ root@machine:~$ ./host_setup.sh -v 2019.1
 ```
 
 5. Wait until installation completed. During the period you may need press [Y] to continue. Please Note: If you choose flashing FPGA, you need to cold reboot local machine after installation completed to load the new image on FPGA.
+
+## Installation Options
+```
+--skip-xrt-install
+```
+This option allows a user to skip the XRT installation portion of this script.
+```
+--skip-shell-flash
+```
+This option allows a user to skip the shell flash portion of this script.
+```
+-v|--version
+```
+This option allows a user to select the XRT/Shell version to be installed/flashed onto the system.
+The available options are listed in conf/spec.txt or the usage/list functions.
+```
+--local-xrt
+```
+This option allows a user to install a local version of XRT by providing a path to a local XRT package.
+```
+-p|--platform
+```
+This option allows a user to only flash cards of the platform card specified.
+Card options: "alveo-u200", "alveo-u250", "alveo-u280", "alveo-u50", "alveo-u55c", 
+```    
+--install-docker
+```
+This option allows a user to install docker if not already installed on the host machine.
+```
+-h|--help
+```
+This option displays the usage of this script.
+```
+--combinations
+``` 
+This option displays the XRT/OS/card combinations supported by this script.
 
 ## U250 2RP Shell Flash
 
