@@ -21,13 +21,13 @@ RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u5
 # Download u200 XRT Shell Pacakges
 RUN wget -cO - https://www.xilinx.com/member/forms/download/eula-xef.html?filename=xilinx-u200-xdma-18.04.deb > /opt/xilinx/shell/xilinx-u200-xdma-18.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u200-xdma-201830.2-2580015_18.04.deb > /opt/xilinx/shell/xilinx-u200-xdma-201830.2-2580015_18.04.deb; \
-    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u200-gen3x16-xdma-all_1-3209015.deb_2.tar.gz > /opt/xilinx/shell/xilinx-u200-gen3x16-xdma-all_1-3209015.deb_2.tar.gz;
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u200-gen3x16-xdma-all_1-3209015.deb_2.tar.gz > /opt/xilinx/shell/xilinx-u200-gen3x16-xdma-all_1-3209015.deb_2.tar.gz; 
 
 # Download u250 XRT Shell Packages
 RUN wget -cO - https://www.xilinx.com/member/forms/download/eula-xef.html?filename=xilinx-u250-xdma-18.04.deb > /opt/xilinx/shell/xilinx-u250-xdma-18.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-xdma-201830.2-2580015_18.04.deb > /opt/xilinx/shell/xilinx-u250-xdma-201830.2-2580015_18.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-gen3x16-xdma-all_3.1-3063142.deb_2.tar.gz > /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-all_3.1-3063142.deb_2.tar.gz;
-
+    
 # Download u280 XRT Shell Packages
 RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201910.1-2579327_18.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201910.1-2579327_18.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.1-2699728_18.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201920.1-2699728_18.04.deb; \
@@ -94,4 +94,3 @@ RUN ln -s /usr/local/share/docker-systemctl-replacement/files/docker/systemctl3.
 RUN export PATH=/usr/local/bin/:$PATH
 
 COPY auto_setup.sh /opt/xilinx/auto_setup.sh
-

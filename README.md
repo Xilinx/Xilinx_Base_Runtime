@@ -1,5 +1,20 @@
 # Release Notes
 
+## Version 2022.2
+Public Docker Image Repositories
+   
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2022.2-centos-7
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2022.2-ubuntu-18:04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2022.2-ubuntu-20:04
+    Ubuntu-22.04: xilinx/xilinx_runtime_base:alveo-2022.2-ubuntu-22:04
+    
+## Version 2022.1
+Public Docker Image Repositories
+   
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2022.1-centos-7
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-18:04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-20:04
+    
 ## Version 2021.2
 Public Docker Image Repositories
 
@@ -87,9 +102,6 @@ For running docker containers of FPGA applications, there are several preconditi
 
 Docker Images | Platform | Version | OS Version
 ------------- | -------- | ------- | ----------
-alveo-2018.3-centos      | Alveo U200 / U250 | 2018.3 | CentOS
-alveo-2018.3-ubuntu-16.04 | Alveo U200 / U250 | 2018.3 | Ubuntu 16.04
-alveo-2018.3-ubuntu-18.04 | Alveo U200 / U250 | 2018.3 | Ubuntu 18.04
 alveo-2019.1-centos      | Alveo U200 / U250 / U280 | 2019.1 | CentOS
 alveo-2019.1-ubuntu-16.04 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 16.04
 alveo-2019.1-ubuntu-18.04 | Alveo U200 / U250 / U280 | 2019.1 | Ubuntu 18.04
@@ -115,6 +127,10 @@ alveo-2021.2-ubuntu-20.04 | Alveo U200 / U250 / U50 / U55c | 2021.2 | Ubuntu 20.
 alveo-2022.1-centos-7 | Alveo U200 / U250 / U50 / U55c | 2022.1 | CentOS 7
 alveo-2022.1-ubuntu-18.04 | Alveo U200 / U250 / U50 / U55c | 2022.1 | Ubuntu 18.04
 alveo-2022.1-ubuntu-20.04 | Alveo U200 / U250 / U50 / U55c | 2022.1 | Ubuntu 20.04
+alveo-2022.2-centos-7 | Alveo U200 / U250 / U50 / U55c | 2022.2 | CentOS 7
+alveo-2022.2-ubuntu-18.04 | Alveo U200 / U250 / U50 / U55c | 2022.2 | Ubuntu 18.04
+alveo-2022.2-ubuntu-20.04 | Alveo U200 / U250 / U50 / U55c | 2022.2 | Ubuntu 20.04
+alveo-2022.2-ubuntu-22.04 | Alveo U200 / U250 / U50 / U55c | 2022.2 | Ubuntu 22.04
 
 ## Setup Host
 
@@ -165,6 +181,11 @@ This option allows a user to skip the XRT installation portion of this script.
 ```
 This option allows a user to skip the shell flash portion of this script.
 ```
+-y|--yes
+```
+This option is for automation, it will automatically select yes in every prompt. 
+This option will remove the previous XRT Installation if applicable, remove previous XRT dependencies if applicable, and flash all cards.
+```
 -v|--version
 ```
 This option allows a user to select the XRT/Shell version to be installed/flashed onto the system.
@@ -191,13 +212,28 @@ This option displays the usage of this script.
 ``` 
 This option displays the XRT/OS/card combinations supported by this script.
 
+## Host_setup Wizard
+```
+sudo ./host_setup
+```
+Running host_setup.sh without any options will start the Host_setup Wizard. The goal of this option is to provide an installation option for individuals who are not familiar with the options for host_setup.
+
+The wizard provides 3 options for XRT Installation
+* Local XRT (Provide a hard path to a customized XRT package)
+* Major XRT Version (Select a Major Year XRT Version to install, 2019.1-2022.1)
+* Skip XRT Installation
+
+Based on the option selected for XRT Installation, the available options for the Shell Flash option will be different
+* If Local XRT option is selected, shell flash will be skipped. Since customized XRT installations can be used here, there may be incompatibilities with any of the shell packages.
+* If Major XRT version option is selected, shell flash will assume you want to use the same version selected for Major XRT version. Otherwise, you can skip the shell flash.
+* If XRT installation was skipped, you can select a major version to flash cards with or flash all of one card type with the latest XRT version.
 ## U250 2RP Shell Flash
 
 Starting with the 2021.2 XRT update, the U250 card now requires a two step process for shell flashing. Due to the nature of this process, the host_setup.sh script can only accomodate the first layer shell flash before the system must undergo a cold reboot. The host_setup.sh script will prompt the user with the command to finish the second layer shell flash. 
 
 ## Run Base Docker Image
 
-Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver Xilinx_Base_Runtimed containers. Inside container, you can have an isolated runtime environment with pre-installed XRT(Xilinx Runtime) and dependencies. 
+Docker is a set of platform-as-a-service (PaaS) products that use OS-level virtualization to deliver Xilinx_Base_Runtime containers. Inside container, you can have an isolated runtime environment with pre-installed XRT(Xilinx Runtime) and dependencies. 
 > However, the container cannot access host kernel. Therefore you need install same version XRT on host as driver and use XRT inside container as runtime. And the FPGA should be flashed with specified Shell. You can find all installation packages from [Xilinx Product Page](https://www.xilinx.com/products/boards-and-kits/alveo.html) or installing with this project. See [**Setup Host**](#setup-host). 
 
 ![Runtime](doc/runtime.png)
@@ -286,6 +322,7 @@ xbutil validate --device <BDF>
 > All of them. run.sh script will scan all FPGA devices and map them to docker container. If you want limit specific cards, please refer question #2. Please be aware, mapping device does NOT mean exclusive for the container. 
 
 ## Notice and Disclaimer
-NOTICE: This Xilinx_Base_Runtime to you in the form of a Docker image (the “Image”).  By using this Image, you agree on behalf of yourself and your employer (if applicable) to be bound by this information and the license agreements applicable to the Xilinx_Base_Runtimede this Image and (if applicable) the Xilinx_Base_Runtimeributed inside this Image but is needed to run the Image and which is downloaded from the internet upon execution of the Docker build utility script made available to you (the “Script”).  Should you elect to execute the Script by entering the necessary commands, you acknowledge that various Xilinx_Base_Runtimed, either from the Image or from the internet, and installed in the Image, and you agree that you are solely responsible for reviewing and abiding by the terms of the license agreements governing such Xilinx_Base_Runtime Docker executable and installed into the Image.  The Xilinx_Base_Runtimets are available for your review either in the “LICENSE” file at the Image download site, or in the source code of the Xilinx_Base_Runtimehe Image, or in the case of either (i) operating system Xilinx_Base_Runtimeided to you for the main community open source project web page, and (ii) Xilinx_Base_Runtimethe internet, at the URL provided to you for the original web page where such Xilinx_Base_Runtime for download.  If you do not agree, then you should not “click” accept the notice nor enter the Script command nor otherwise access, download, install or use the Image.  
+NOTICE: This Xilinx_Base_Runtime to you in the form of a Docker image (the “Image”).  By using this Image, you agree on behalf of yourself and your employer (if applicable) to be bound by this information and the license agreements applicable to the Xilinx_Base_Runtime inside this Image and (if applicable) the Xilinx_Base_Runtime distributed inside this Image but is needed to run the Image and which is downloaded from the internet upon execution of the Docker build utility script made available to you (the “Script”).  Should you elect to execute the Script by entering the necessary commands, you acknowledge that various Xilinx_Base_Runtime's, either from the Image or from the internet, and installed in the Image, and you agree that you are solely responsible for reviewing and abiding by the terms of the license agreements governing such Xilinx_Base_Runtime Docker executable and installed into the Image.  The Xilinx_Base_Runtime are available for your review either in the “LICENSE” file at the Image download site, or in the source code of the Xilinx_Base_Runtime Image, or in the case of either (i) operating system Xilinx_Base_Runtime to you for the main community open source project web page, and (ii) Xilinx_Base_Runtime from the internet, at the URL provided to you for the original web page where such Xilinx_Base_Runtime for download.  If you do not agree, then you should not “click” accept the notice nor enter the Script command nor otherwise access, download, install or use the Image.  
 
 DISCLAIMER:  THIS IMAGE IS MADE AVAILABLE “AS-IS” AND XILINX DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE. Xilinx shall not be liable (whether in contract or tort, including negligence, or under any other theory of liability) for any loss or damage of any kind or nature related to, arising under, or in connection with, this Image, including for any direct, indirect, special, incidental, or consequential loss or damage (including loss of data, profits, goodwill, or any type of loss or damage suffered as a result of any action brought by a third party) even if such damage or loss was reasonably foreseeable or Xilinx had been advised of the possibility of the same.
+

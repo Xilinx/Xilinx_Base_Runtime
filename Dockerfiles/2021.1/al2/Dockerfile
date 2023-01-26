@@ -12,7 +12,7 @@ RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_20211
 RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u50-gen3x16-xdma-201920_3-1.noarch.rpm.tar.gz > /opt/xilinx/shell/xilinx-u50-gen3x16-xdma-201920_3-1.noarch.rpm.tar.gz; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u200-gen3x16-xdma-noarch_1-3209015.rpm_2.tar.gz > /opt/xilinx/shell/xilinx-u200-gen3x16-xdma-noarch_1-3209015.rpm_2.tar.gz; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-gen3x16-xdma-platform-3.1-1.noarch.rpm.tar.gz > /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-platform-3.1-1.noarch.rpm.tar.gz; \
-    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-3246211.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-3246211.x86_64.rpm;
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-3246211.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-3246211.x86_64.rpm; 
 
 # Install XRT and modify the Path
 RUN XRT_VERSION="202110.2.11.634"; \
@@ -34,4 +34,3 @@ RUN ln -s /usr/local/share/docker-systemctl-replacement/files/docker/systemctl3.
 RUN export PATH=/usr/local/bin/:$PATH
 
 COPY auto_setup.sh /opt/xilinx/auto_setup.sh
-

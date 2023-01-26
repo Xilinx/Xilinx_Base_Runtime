@@ -1,5 +1,6 @@
 #!/bin/bash
-wrapper_debug=1
+
+# Functions
 
 #function to compare two versions
 # 0 - =
@@ -35,46 +36,6 @@ vercomp () {
     done
     return 0
 }
-
-#user input big release version
-processEnvBig () {
-    USER_SETTING_tmp=
-    USER_SETTING_Version=
-    for ((i=0; i<${#BIG_Release[@]}; i++))
-    do
-        if [ "${BIG_Release[i]}" == "$XRT_VERSION" ] ; then
-        if [ -z $USER_SETTING_tmp ]; then
-            USER_SETTING_tmp=${SMALL_Release[i]}
-            USER_SETTING_Version=${Release[i]}
-        else
-            vercomp ${SMALL_Release[i]} $USER_SETTING_tmp
-            if [ "$?" == "1" ]; then
-            USER_SETTING_tmp=${SMALL_Release[i]}
-            USER_SETTING_Version=${Release[i]}
-            fi
-        fi
-        fi
-    done
-    if [ ! -z $USER_SETTING_tmp ]; then
-        XILINX_XRT=/opt/xilinx/xrt_versions/xrt_${USER_SETTING_Version}
-    fi
-}
-
-#user input small release version
-processEnvSmall () {
-    USER_SETTING_SMALLVersion=
-    for ((i=0; i<${#SMALL_Release[@]}; i++))
-    do
-        if [ "${SMALL_Release[i]}" = "$XRT_VERSION" ] ; then
-        USER_SETTING_SMALLVersion=$i
-        break
-        fi
-    done
-    if [ ! -z $USER_SETTING_SMALLVersion ]; then
-        XILINX_XRT=/opt/xilinx/xrt_versions/xrt_${Release[$USER_SETTING_SMALLVersion]}
-    fi
-}
-
 showRels () {
   if [ -z "$DEFAULT_Release" ];then
     rels=
@@ -90,7 +51,6 @@ showRels () {
     echo "WARNING: Please install one of the supported versions XRT listed above on the host machine or set the environment variable XRT_VERSION=${rels} to force run."
   fi
 }
-
 processEnvAuto () {
     #get all the supported version from the xrt folders
 
@@ -113,7 +73,7 @@ processEnvAuto () {
         break
         fi
     done
-    # warning when no mathed xrt
+    # warning when no matched xrt
     showRels
 
     #if no matched xrt, choose nearest new version -> nearest old version
@@ -163,60 +123,72 @@ processEnvAuto () {
     fi
 }
 
-#check the sysfile to get driver version
-if [ ! -f /sys/bus/pci/drivers/xocl/module/version ]; then
-    echo "ERROR: xocl driver cannot be accessed in container! Abort!"
-    exit 1
-fi
-
-driver_ver=$(cat /sys/bus/pci/drivers/xocl/module/version | cut -d, -f1)
-if [ $wrapper_debug -ne 0 ]; then
-    echo "INFO: XRT version on host machine is ${driver_ver}"
-fi
-
-BIG_Release=()
-SMALL_Release=()
+VER=()
+MAJOR_VER=()
+MINOR_VER=()
 Release=()
-let index=0 
+index=0 
 for d in `ls -d /opt/xilinx/xrt_versions/xrt_*`; do
     rel=${d#/opt/xilinx/xrt_versions/xrt_}
-    BIG_Release[$index]=${rel:0:6}
-    SMALL_Release[index]=${rel:7}
+    VER[$index]=${rel:7}
+    MAJOR_VER[$index]=$(echo ${rel:7} | cut -d'.' -f 2)
+    MINOR_VER[$index]=$(echo ${rel:7} | cut -d'.' -f 3)
     Release[$index]=${rel}
     ((index++))
 done
 
-XILINX_XRT=
-if [ -z "$XRT_VERSION" ]; then
-    # when no mathing, raise warning
-    echo "INFO: No match found, will automatically source XRT Version ${XILINX_XRT}"
-    XRT_VERSION=${driver_ver}
-    processEnvAuto
-else
-    # if the setting from env
-    echo "INFO: Match found, will source XRT Version ${XRT_VERSION}"
-    if [[ " ${Release[@]} " =~ " ${XRT_VERSION} " ]];then
-        XILINX_XRT=/opt/xilinx/xrt_versions/xrt_${XRT_VERSION}
-    else
-        processEnvBig
-        if [ -z ${XILINX_XRT} ];then
-            processEnvSmall
-        fi
-        if [ -z ${XILINX_XRT} ];then
-            echo "INFO: Match found, will automatically source XRT Version ${XILINX_XRT}"
-            processEnvAuto
-        fi
+echo "XRT Versions detected on image: ${VER[@]}" 
+driver_ver=$(cat /sys/bus/pci/drivers/xocl/module/version | cut -d, -f1)
+echo "XRT Version detected on host: $driver_ver" 
+
+index=0
+for check_ver in ${VER[@]}; do
+    echo "Checking version: $check_ver against Driver version: $driver_ver"
+    if [ "$check_ver" == "$driver_ver" ]; then
+        echo "Match found for XRT Version: $check_ver"
+        source /opt/xilinx/xrt_versions/xrt_${Release[$index]}/setup.sh
+        return
     fi
-fi
-#set environment
-echo "source ${XILINX_XRT}/setup.sh"
-source ${XILINX_XRT}/setup.sh 1>/dev/null
-if [ $wrapper_debug -ne 0 ]; then
-    echo "XILINX_XRT=${XILINX_XRT}"
-    echo "PATH=${PATH}"
-    echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
-fi
-if [ ${driver_ver} != ${XRT_VERSION} ]; then
-    export INTERNAL_BUILD=1
-    echo "INFO: Version mismatch, INTERNAL_BUILD set to 1"
+    ((index++))
+done 
+
+echo "No direct match found, looking for closest match"
+export INTERNAL_BUILD=1
+host_major_ver=$(echo $driver_ver | cut -d'.' -f 2)
+host_minor_ver=$(echo $driver_ver | cut -d'.' -f 3)
+
+major_diff=()
+minor_diff=()
+major_match_loc=()
+major_match_counter=0
+
+for ((i=0; i<${#MAJOR_VER[@]}; i++)) do
+    major_diff[i]=$(($host_major_ver-${MAJOR_VER[i]}))
+    #echo ${major_diff[i]}
+    if [ "${major_diff[i]}" -eq 0 ]; then
+        ((major_match_counter++))
+        major_match_loc=(${major_match_loc[@]} $i)
+    fi
+done
+
+if [ "$major_match_counter" -eq 0 ]; then
+    # We want to find the closest new version
+
+    echo "no major version matches found"
+elif [ "$major_match_counter" -eq 1 ]; then
+    echo "one major version match found"
+    source /opt/xilinx/xrt_versions/xrt_${Release[$major_match_loc]}/setup.sh
+elif [ "$major_match_counter" -ge 1 ]; then
+    echo "Major version matches found at index: ${major_match_loc[@]}"
+    curr_min_loc=${major_match_loc[0]}
+    curr_min=$(($host_minor_ver-${MINOR_VER[${major_match_loc[0]}]}))
+    for ((i=0; i<${#major_match_loc[@]}; i++)) do
+        temp_diff=$(($host_minor_ver-${MINOR_VER[${major_match_loc[i]}]}))
+        minor_diff[i]=${temp_diff#-}
+        if [ "$curr_min" -gt "${minor_diff[i]}" ]; then
+            curr_min=${minor_diff[i]}
+            curr_min_loc=${major_match_loc[i]}
+        fi
+    done
+    source /opt/xilinx/xrt_versions/xrt_${Release[curr_min_loc]}/setup.sh
 fi

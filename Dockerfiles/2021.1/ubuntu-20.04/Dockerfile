@@ -51,4 +51,3 @@ RUN export PATH=/usr/local/bin/:$PATH
 
 COPY auto_setup.sh /opt/xilinx/auto_setup.sh
 
-

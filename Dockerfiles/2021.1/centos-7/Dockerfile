@@ -29,13 +29,13 @@ RUN wget -cO - https://www.xilinx.com/member/forms/download/eula-xef.html?filena
 # Download u250 XRT Shell Packages
 RUN wget -cO - https://www.xilinx.com/member/forms/download/eula-xef.html?filename=xilinx-u250-xdma-201820.1-2342198.x86_64.rpm > /opt/xilinx/shell/xilinx-u250-xdma-201820.1-2342198.x86_64.rpm; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-xdma-201830.2-2580015.x86_64.rpm > /opt/xilinx/shell/xilinx-u250-xdma-201830.2-2580015.x86_64.rpm; \
-    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-gen3x16-xdma-platform-3.1-1.noarch.rpm.tar.gz > /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-platform-3.1-1.noarch.rpm.tar.gz;
-
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-gen3x16-xdma-platform-3.1-1.noarch.rpm.tar.gz > /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-platform-3.1-1.noarch.rpm.tar.gz; 
+    
 # Download u280 XRT Shell Packages
 RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201910.1-2579327.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201910.1-2579327.x86_64.rpm; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.1-2699728.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201920.1-2699728.x86_64.rpm; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-2789161.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-2789161.x86_64.rpm; \
-    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-3246211.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-3246211.x86_64.rpm;
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-3246211.x86_64.rpm > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-3246211.x86_64.rpm; 
 
 # Untar relevant shell packages
 RUN cd /opt/xilinx/shell; \
@@ -108,4 +108,3 @@ RUN ln -s /usr/local/share/docker-systemctl-replacement/files/docker/systemctl3.
 RUN export PATH=/usr/local/bin/:$PATH
 
 COPY auto_setup.sh /opt/xilinx/auto_setup.sh
-

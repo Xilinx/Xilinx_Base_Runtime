@@ -26,10 +26,10 @@ RUN wget -cO - https://www.xilinx.com/member/forms/download/eula-xef.html?filena
 RUN wget -cO - https://www.xilinx.com/member/forms/download/eula-xef.html?filename=xilinx-u250-xdma-16.04.deb > /opt/xilinx/shell/xilinx-u250-xdma-16.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-xdma-201830.2-2580015_16.04.deb > /opt/xilinx/shell/xilinx-u250-xdma-201830.2-2580015_16.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-gen3x16-xdma-platform_3.1-1_all.deb.tar.gz > /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-platform_3.1-1_all.deb.tar.gz;
-
+    
 # Download u280 XRT Shell Packages
 RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201910.1-2579327_16.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201910.1-2579327_16.04.deb; \
-    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.1-2699728_16.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201920.1-2699728_16.04.deb; \
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.1-2699728_16.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201920.1-2699728_16.04.deb; \  
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-2789161_16.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-2789161_16.04.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-3246211_16.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-3246211_16.04.deb;
 
@@ -38,7 +38,7 @@ RUN cd /opt/xilinx/shell; \
     tar -zxvf /opt/xilinx/shell/Xilinx_u50-gen3x16-xdma-201920.3-2784799_16.04_deb.tar.gz; \
     tar -zxvf /opt/xilinx/shell/xilinx-u50-gen3x16-xdma-201920_3-3_all.deb.tar.gz; \
     tar -zxvf /opt/xilinx/shell/xilinx-u200-gen3x16-xdma-all_1-3209015.deb_2.tar.gz; \
-    tar -zxvf /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-platform_3.1-1_all.deb.tar.gz; \
+    tar -zxvf /opt/xilinx/shell/xilinx-u250-gen3x16-xdma-platform_3.1-1_all.deb.tar.gz; \ 
     rm /opt/xilinx/shell/*.tar.gz
 
 # Install XRT and modify the Path

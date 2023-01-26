@@ -173,10 +173,9 @@ done
 
 if [ "$major_match_counter" -eq 0 ]; then
     # We want to find the closest new version
-
-    echo "no major version matches found"
+    echo "No major version matches found"
 elif [ "$major_match_counter" -eq 1 ]; then
-    echo "one major version match found"
+    echo "One major version match found. Selected XRT Version is: ${Release[$major_match_loc]}"
     source /opt/xilinx/xrt_versions/xrt_${Release[$major_match_loc]}/setup.sh
 elif [ "$major_match_counter" -ge 1 ]; then
     echo "Major version matches found at index: ${major_match_loc[@]}"

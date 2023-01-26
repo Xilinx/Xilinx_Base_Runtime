@@ -12,7 +12,29 @@ RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_20191
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_202110.2.11.634_18.04-amd64-xrt.deb > ${PACKAGE_PATH}/xrt_202110.2.11.634_18.04-amd64-xrt.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_202120.2.12.427_18.04-amd64-xrt.deb > ${PACKAGE_PATH}/xrt_202120.2.12.427_18.04-amd64-xrt.deb; \
     wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_202210.2.13.466_18.04-amd64-xrt.deb > ${PACKAGE_PATH}/xrt_202210.2.13.466_18.04-amd64-xrt.deb; \
-    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrm_202210.1.4.9_18.04-x86_64.deb > ${PACKAGE_PATH}/xrm_202210.1.4.9_18.04-x86_64.deb;
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrt_202220.2.14.354_18.04-amd64-xrt.deb > ${PACKAGE_PATH}/xrt_202220.2.14.354_18.04-amd64-xrt.deb; \
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xrm_202220.1.5.212_18.04-x86_64.deb > ${PACKAGE_PATH}/xrm_202220.1.5.212_18.04-x86_64.deb;
+
+# Download u200 XRT Shell Pacakges
+RUN wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u200-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz > /opt/xilinx/shell/xilinx-u200-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+# Download u250 XRT Shell Packages
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u250-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz > /opt/xilinx/shell/xilinx-u250-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+# Download u280 XRT Shell Packages
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u280-xdma-201920.3-3246211_18.04.deb > /opt/xilinx/shell/xilinx-u280-xdma-201920.3-3246211_18.04.deb; \
+# Download u50 XRT Shell Packages
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u50-xdma-201910.1-0911_18.04.deb > /opt/xilinx/shell/xilinx-u50-xdma-201910.1-0911_18.04.deb; \
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u50-xdma-201920.1-2699728_18.04.deb > /opt/xilinx/shell/xilinx-u50-xdma-201920.1-2699728_18.04.deb; \
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u50-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz > /opt/xilinx/shell/xilinx-u50-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+# Download u55c XRT Shell Packages
+    wget -cO - https://www.xilinx.com/bin/public/openDownload?filename=xilinx-u55c-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz > /opt/xilinx/shell/xilinx-u55c-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz;
+
+# Untar Relevant Shell Packages
+RUN cd /opt/xilinx/shell; \
+    tar -ozxvf /opt/xilinx/shell/xilinx-u200-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+    tar -ozxvf /opt/xilinx/shell/xilinx-u250-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+    tar -ozxvf /opt/xilinx/shell/xilinx-u50-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+    tar -ozxvf /opt/xilinx/shell/xilinx-u55c-gen3x16-xdma_2022.1_2022_0415_2123-all.deb.tar.gz; \
+    rm /opt/xilinx/shell/*.tar.gz
 
 # Install XRT and modify the Path
 RUN XRT_VERSION="201910.2.2.2250"; \
@@ -58,10 +80,15 @@ RUN XRT_VERSION="201910.2.2.2250"; \
     mv /opt/xilinx/xrt /opt/xilinx/xrt_versions/xrt_${XRT_VERSION}; \
     sed -i "s/\/opt\/xilinx\/xrt/\/opt\/xilinx\/xrt_versions\/xrt_$XRT_VERSION/" /opt/xilinx/xrt_versions/xrt_${XRT_VERSION}/setup.sh; \
     sed -i "s/\/opt\/xilinx\/xrt/\/opt\/xilinx\/xrt_versions\/xrt_$XRT_VERSION/" /opt/xilinx/xrt_versions/xrt_${XRT_VERSION}/setup.csh; \
+    XRT_VERSION="202220.2.14.354"; \
+    apt-get install -y ${PACKAGE_PATH}/xrt_${XRT_VERSION}_18.04-amd64-xrt.deb; \
+    mv /opt/xilinx/xrt /opt/xilinx/xrt_versions/xrt_${XRT_VERSION}; \
+    sed -i "s/\/opt\/xilinx\/xrt/\/opt\/xilinx\/xrt_versions\/xrt_$XRT_VERSION/" /opt/xilinx/xrt_versions/xrt_${XRT_VERSION}/setup.sh; \
+    sed -i "s/\/opt\/xilinx\/xrt/\/opt\/xilinx\/xrt_versions\/xrt_$XRT_VERSION/" /opt/xilinx/xrt_versions/xrt_${XRT_VERSION}/setup.csh; \
     ln -s /opt/xilinx/xrt_versions/xrt_${XRT_VERSION} /opt/xilinx/xrt;
 
 # Download and install XRM package
-RUN XRM_VERSION="202210.1.4.9"; \
+RUN XRM_VERSION="202220.1.5.212"; \
     apt-get install -y ${PACKAGE_PATH}/xrm_${XRM_VERSION}_18.04-x86_64.deb
 
 # Enalble Systemctl
