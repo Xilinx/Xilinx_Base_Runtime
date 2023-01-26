@@ -1,5 +1,6 @@
 # Release Notes
 
+<<<<<<< HEAD
 ## Version 2022.2
 Public Docker Image Repositories
    
@@ -14,6 +15,17 @@ Public Docker Image Repositories
     CentOS-7: xilinx/xilinx_runtime_base:alveo-2022.1-centos-7
     Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-18:04
     Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-20:04
+=======
+## Version 2022.1
+Public Docker Image Repositories
+
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2022.1-centos-7
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-18.04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-20.04
+    CentOS-7-noshell: xilinx/xilinx_runtime_base:alveo-2022.1-centos-7-noshell
+    Ubuntu-18.04-noshell: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-18.04-noshell
+    Ubuntu-20.04-noshell: xilinx/xilinx_runtime_base:alveo-2022.1-ubuntu-20.04-noshell
+>>>>>>> 66c897e6cf67dd6e3e44b8f0bf6ad48d02a49189
     
 ## Version 2021.2
 Public Docker Image Repositories
@@ -21,8 +33,8 @@ Public Docker Image Repositories
     AL2: xilinx/xilinx_runtime_base:alveo-2021.2-al2
     CentOS-7: xilinx/xilinx_runtime_base:alveo-2021.2-centos-7
     CentOS-8: xilinx/xilinx_runtime_base:alveo-2021.2-centos-8
-    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-18:04
-    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-20:04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-18.04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.2-ubuntu-20.04
 
 ## Version 2021.1
 Public Docker Image Repositories
@@ -30,18 +42,18 @@ Public Docker Image Repositories
     AL2: xilinx/xilinx_runtime_base:alveo-2021.1-al2
     CentOS-7: xilinx/xilinx_runtime_base:alveo-2021.1-centos-7
     CentOS-8: xilinx/xilinx_runtime_base:alveo-2021.1-centos-8
-    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-16:04
-    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-18:04
-    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-20:04
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-16.04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-18.04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2021.1-ubuntu-20.04
     
 ## Version 2020.2
 Public Docker Image Repositories
 
     CentOS-7: xilinx/xilinx_runtime_base:alveo-2020.2-centos-7
     CentOS-8: xilinx/xilinx_runtime_base:alveo-2020.2-centos-8
-    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-16:04
-    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-18:04
-    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-20:04
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-16.04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-18.04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2020.2-ubuntu-20.04
 
 ## Version 2020.1
 Public Docker Image Repositories
