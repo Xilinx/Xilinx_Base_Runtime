@@ -64,15 +64,15 @@ Public Docker Image Repositories
 Public Docker Image Repositories
 
     CentOS: xilinx/xilinx_runtime_base:alveo-2019.1-centos
-    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2019.1-ubuntu-16:04
-    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2019.1-ubuntu-18:04
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2019.1-ubuntu-16.04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2019.1-ubuntu-18.04
 
 ## Version 2018.3
 Public Docker Image Repositories
 
     CentOS: xilinx/xilinx_runtime_base:alveo-2018.3-centos
-    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2018.3-ubuntu-16:04
-    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2018.3-ubuntu-18:04
+    Ubuntu-16.04: xilinx/xilinx_runtime_base:alveo-2018.3-ubuntu-16.04
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2018.3-ubuntu-18.04
 
 # Xilinx Runtime Base Image Deployment Docker Solution
 
