@@ -1,5 +1,13 @@
 # Release Notes
 
+## Version 2023.1
+Public Docker Image Repositories
+   
+    CentOS-7: xilinx/xilinx_runtime_base:alveo-2023.1-centos-7
+    Ubuntu-18.04: xilinx/xilinx_runtime_base:alveo-2023.1-ubuntu-18.04
+    Ubuntu-20.04: xilinx/xilinx_runtime_base:alveo-2023.1-ubuntu-20.04
+    Ubuntu-22.04: xilinx/xilinx_runtime_base:alveo-2023.1-ubuntu-22.04
+    
 ## Version 2022.2
 Public Docker Image Repositories
    
@@ -325,4 +333,5 @@ xbutil validate --device <BDF>
 NOTICE: This Xilinx_Base_Runtime to you in the form of a Docker image (the “Image”).  By using this Image, you agree on behalf of yourself and your employer (if applicable) to be bound by this information and the license agreements applicable to the Xilinx_Base_Runtime inside this Image and (if applicable) the Xilinx_Base_Runtime distributed inside this Image but is needed to run the Image and which is downloaded from the internet upon execution of the Docker build utility script made available to you (the “Script”).  Should you elect to execute the Script by entering the necessary commands, you acknowledge that various Xilinx_Base_Runtime's, either from the Image or from the internet, and installed in the Image, and you agree that you are solely responsible for reviewing and abiding by the terms of the license agreements governing such Xilinx_Base_Runtime Docker executable and installed into the Image.  The Xilinx_Base_Runtime are available for your review either in the “LICENSE” file at the Image download site, or in the source code of the Xilinx_Base_Runtime Image, or in the case of either (i) operating system Xilinx_Base_Runtime to you for the main community open source project web page, and (ii) Xilinx_Base_Runtime from the internet, at the URL provided to you for the original web page where such Xilinx_Base_Runtime for download.  If you do not agree, then you should not “click” accept the notice nor enter the Script command nor otherwise access, download, install or use the Image.  
 
 DISCLAIMER:  THIS IMAGE IS MADE AVAILABLE “AS-IS” AND XILINX DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE. Xilinx shall not be liable (whether in contract or tort, including negligence, or under any other theory of liability) for any loss or damage of any kind or nature related to, arising under, or in connection with, this Image, including for any direct, indirect, special, incidental, or consequential loss or damage (including loss of data, profits, goodwill, or any type of loss or damage suffered as a result of any action brought by a third party) even if such damage or loss was reasonably foreseeable or Xilinx had been advised of the possibility of the same.
+
 

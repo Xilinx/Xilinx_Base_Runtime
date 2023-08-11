@@ -53,6 +53,10 @@ list() {
     echo "Alveo U200 / U250 / U280 / U50 / U55c     2022.2       Ubuntu 18.04"
     echo "Alveo U200 / U250 / U280 / U50 / U55c     2022.2       Ubuntu 20.04"
     echo "Alveo U200 / U250 / U280 / U50 / U55c     2022.2       Ubuntu 22.04"
+    echo "Alveo U200 / U250 / U280 / U50 / U55c     2023.1       CentOS 7"
+    echo "Alveo U200 / U250 / U280 / U50 / U55c     2023.1       Ubuntu 18.04"
+    echo "Alveo U200 / U250 / U280 / U50 / U55c     2023.1       Ubuntu 20.04"
+    echo "Alveo U200 / U250 / U280 / U50 / U55c     2023.1       Ubuntu 22.04"
 }
 
 vercomp () {
@@ -89,7 +93,7 @@ vercomp () {
 get_packages() {
     COMB="${PLATFORM}_${VERSION}_${OSVERSION}"
     COMB=`echo $COMB| tr '[:upper:]' '[:lower:]'`
-    echo $COMB
+    echo "INFO: Configuration is $COMB"
     if grep -q $COMB "conf/spec.txt"; then
         XRT_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
         SHELL_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $2}' | awk -F= '{print $2}'`
@@ -98,14 +102,17 @@ get_packages() {
         PACKAGE_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $6}' | awk -F= '{print $2}'`
         PACKAGE_VERSION=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $7}' | awk -F= '{print $2}'`
         XRT_VERSION=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $8}' | awk -F= '{print $2}'`
-        SHELL_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $9}' | awk -F= '{print $2}'`
-        echo "$SHELL_NAME"
         if [[ "$PLATFORM" == "alveo-u250" ]]; then
             FLASH_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $14}' | awk -F= '{print $2}'`
             SHELL_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $11}' | awk -F= '{print $2}'`
             SHELL_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $15}' | awk -F= '{print $2}'`
-            2RP_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $16}' | awk -F= '{print $2}'`
+            TRP_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $16}' | awk -F= '{print $2}'`
+	    XRM_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $17}' | awk -F= '{print $2}'`
+        else
+            SHELL_NAME=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $9}' | awk -F= '{print $2}'`
+	    XRM_PACKAGE=`grep ^$COMB: conf/spec.txt | awk -F':' '{print $2}' | awk -F';' '{print $10}' | awk -F= '{print $2}'`
         fi
+	echo "INFO: Shell package to be flashed is $SHELL_NAME"
     else
         echo "ERROR: Your combination of OS/Cards/XRT versions($COMB) is not supported. Please reference the list below for supported combinations." 
         SKIP_SHELL_FLASH=1   
@@ -115,12 +122,14 @@ get_packages() {
 
 get_packages_xrt() {
     COMB="${VERSION}_${OSVERSION}"
+    echo "INFO: Configuration is $COMB"
     if grep -q $COMB "conf/spec_xrt.txt"; then
         XRT_PACKAGE=`grep ^$COMB: conf/spec_xrt.txt | awk -F':' '{print $2}' | awk -F';' '{print $1}' | awk -F= '{print $2}'`
         XRT_VERSION=`grep ^$COMB: conf/spec_xrt.txt | awk -F':' '{print $2}' | awk -F';' '{print $2}' | awk -F= '{print $2}'`
     else
         echo "ERROR: Your combination of OS/XRT Version is not supported. Please reference the list below for supported combinations."    
         list
+	exit
     fi
 }
 
@@ -221,6 +230,7 @@ confirm() {
 init() {
     XRT=1
     SHELL=1
+    XRM=1
     UBUNTU=0
     CENTOS=0
     cardLocArr=()
@@ -258,6 +268,18 @@ setup() {
             apt-get -qq install -y wget
         elif [[ "$CENTOS" == 1 ]]; then
             yum install -q -y wget
+        fi
+    fi
+
+    if [[ "$UBUNTU" == 1 ]]; then
+        ls /usr/src/linux-headers-$(uname -r) > /dev/null
+        if [ $? != 0 ] ; then
+            apt-get -qq install -y linux-headers-$(uname -r)
+        fi
+    elif [[ "$CENTOS" == 1 ]]; then
+        ls /usr/src/kernels/$(uname -r) > /dev/null
+        if [ $? != 0 ] ; then
+            yum install -q -y kernel-devel-$(uname -r)
         fi
     fi
 
@@ -341,15 +363,6 @@ version_compare_install() {
 }
 
 flash_cards() {
-    if [[ "$PLATFORM" == "alveo-u250" && "$CURR_SHELL" == "$SHELL_NAME" && "$YES" == 1 ]]; then
-        echo "STATUS: Base Layer of U250 shell detected, automatically flashing 2RP Layer."
-        /opt/xilinx/xrt/bin/xbmgmt program --device ${cardLocArr[$cardIndex]} --shell $FLASH_PACKAGE
-        return
-    fi
-    if [[ "$PLATFORM" == "alveo-u250" && "$CURR_SHELL" == "$2RP_NAME" ]]; then
-        echo "INFO: 2RP Layer of U250 shell detected, skipping."
-        return
-    fi
     check_packages
     if [[ $? != 0 ]]; then
         echo "STATUS: Downloading Shell Package(s)."
@@ -399,6 +412,28 @@ check_current_shell_version() {
     xbutil examine >/dev/null 2>&1
     if [[ $? == 0 ]]; then
         CURR_SHELL=`xbmgmt examine --device ${cardLocArr[$cardIndex]} | grep Platform | cut -d':' -f 2 | sed -n 1p | sed -e 's/^[[:space:]]*//'`
+        if [[ "$PLATFORM" == "alveo-u250" && "$CURR_SHELL" == "$SHELL_NAME" && "$YES" == 1 ]]; then
+            echo "STATUS: Base Layer of U250 shell detected, automatically flashing 2RP Layer."
+            ls $FLASH_PACKAGE > /dev/null
+            if [[ $? != 0 ]]; then
+                echo "STATUS: 2RP Package not detected on system, downloading from web"
+                wget -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$SHELL_PACKAGE" > /tmp/$SHELL_PACKAGE
+                tar xzvf /tmp/$SHELL_PACKAGE -C /tmp/
+                rm /tmp/$SHELL_PACKAGE
+                if [[ "$UBUNTU" == 1 ]]; then
+                    apt-get -qq install -y /tmp/xilinx*
+                elif [[ "$CENTOS" == 1 ]]; then
+                    yum install -q -y /tmp/xilinx*
+                fi
+                rm /tmp/xilinx*
+            fi
+            /opt/xilinx/xrt/bin/xbmgmt program --device ${cardLocArr[$cardIndex]} --shell $FLASH_PACKAGE
+            return
+        fi
+        if [[ "$PLATFORM" == "alveo-u250" && "$CURR_SHELL" == "$TRP_NAME" ]]; then
+            echo "INFO: 2RP Layer of U250 shell detected, skipping."
+            return
+        fi
         echo "INFO: Current shell on ${cardLocArr[$cardIndex]} is $CURR_SHELL."
         echo "INFO: New shell to be installed on ${cardLocArr[$cardIndex]} is $SHELL_NAME."
         if [[ "$CURR_SHELL" != "$SHELL_NAME" ]]; then
@@ -439,8 +474,9 @@ install_xrt() {
         echo "OPTION 6: 2021.2"
         echo "OPTION 7: 2022.1"
         echo "OPTION 8: 2022.2"
+        echo "OPTION 9: 2023.1"
         while true; do
-            read -p "CHECK: Please enter your choice from the options above [1-8]: " yn
+            read -p "CHECK: Please enter your choice from the options above [1-9]: " yn
             case $yn in
                 [1]* ) VERSION=2019.1; break ;;
                 [2]* ) VERSION=2019.2; break ;;
@@ -450,7 +486,8 @@ install_xrt() {
                 [6]* ) VERSION=2021.2; break ;;
                 [7]* ) VERSION=2022.1; break ;;
                 [8]* ) VERSION=2022.2; break ;;
-                * ) echo "INFO: Please answer 1, 2, 3, 4, 5, 6, 7, or 8";;
+                [9]* ) VERSION=2023.1; break ;;
+                * ) echo "INFO: Please answer 1, 2, 3, 4, 5, 6, 7, 8, or 9";;
             esac
         done
         get_packages_xrt
@@ -517,8 +554,9 @@ shell_flash() {
         echo "OPTION 6: 2021.2"
         echo "OPTION 7: 2022.1"
         echo "OPTION 8: 2022.2"
+        echo "OPTION 9: 2023.1"
         while true; do
-            read -p "CHECK: Please enter your choice from the options above [1-8]: " yn
+            read -p "CHECK: Please enter your choice from the options above [1-9]: " yn
             case $yn in
                 [1]* ) VERSION=2019.1; break ;;
                 [2]* ) VERSION=2019.2; break ;;
@@ -528,7 +566,8 @@ shell_flash() {
                 [6]* ) VERSION=2021.2; break ;;
                 [7]* ) VERSION=2022.1; break ;;
                 [8]* ) VERSION=2022.2; break ;;
-                * ) echo "INFO: Please answer 1, 2, 3, 4, 5, 6, 7, or 8";;
+                [9]* ) VERSION=2023.1; break ;;
+                * ) echo "INFO: Please answer 1, 2, 3, 4, 5, 6, 7, 8, or 9";;
             esac
         done
     elif [[ "$PLATFORM_SHELL_OPTION" == 1 ]]; then
@@ -578,18 +617,49 @@ shell_flash() {
     fi
 }
 
+check_xrm() {
+    if [[ "$YES" == 1 ]]; then
+        install_xrm
+    else 
+        while true; do
+            read -p "CHECK: Do you want to install XRM? [y/n]: " yn
+            case $yn in
+                [Yy]* ) install_xrm;
+                        break;;
+                [Nn]* ) echo ""
+                        break;;
+                * ) echo "INFO: Please answer Y or N.";;
+            esac
+        done
+    fi
+}
+
+install_xrm() {
+    wget -q -cO - "https://www.xilinx.com/bin/public/openDownload?filename=$XRM_PACKAGE" > /tmp/$XRM_PACKAGE
+        if [[ "$UBUNTU" == 1 ]]; then
+            apt-get install -y -qq /tmp/$XRM_PACKAGE
+        elif [[ "$CENTOS" == 1 ]]; then
+            yum install -y -qq /tmp/$XRM_PACKAGE
+        fi
+}
+
 default() {
     if [[ "$XRT" == 1 ]]; then
         echo "STATUS: Installing XRT."
         if [[ "$LOCAL_XRT" == "NONE" ]]; then
-            get_packages
-        fi
+       	    get_packages
+        else
+	    get_packages_xrt
+	fi
         install_xrt
     fi
-
     if [[ "$SHELL" == 1 ]]; then
         echo "STATUS: Installing Shell."
         shell_flash
+    fi
+    if [[ "$XRM" == 1 ]]; then
+        echo "STATUS: Installing XRM."
+        check_xrm
     fi
     echo "STATUS: host_setup complete."
 }
@@ -598,7 +668,7 @@ wizard() {
     # step 1, XRT check
     echo "CHECK: Please select one of the following in regards to XRT installation."
     echo "OPTION 1: Install Local XRT"
-    echo "OPTION 2: Install Major XRT Version (2019.1-2022.2)"
+    echo "OPTION 2: Install Major XRT Version (2019.1-2023.1)"
     echo "OPTION 3: Skip XRT Installation"
     while true; do
         read -p "CHECK: Please enter your choice from the options above [1-3]: " yn
@@ -634,7 +704,7 @@ wizard() {
         done
     elif [[ "$SKIP_XRT_OPTION" == 1 ]]; then
         echo "CHECK: Please select one of the following in regards to card shell flash."
-        echo "OPTION 1: Flash Major Shell Version (2019.1-2022.2)."
+        echo "OPTION 1: Flash Major Shell Version (2019.1-2023.1)."
         echo "OPTION 2: Flash Card Platform ( U50 / U200 / U250 / U55c ) with latest Shell Version."
         while true; do
             read -p "CHECK: Please enter your choice from the options above [1-2]: " yn
@@ -678,6 +748,7 @@ else
             -p|--platform        ) PLATFORM_ONLY="$2"; shift 2 ;;
             --skip-xrt-install   ) XRT=0             ; shift 1 ;;
             --skip-shell-flash   ) SHELL=0           ; shift 1 ;;
+            --skip-xrm-install   ) XRM=0             ; shift 1 ;;
             -y|--yes             ) YES=1             ; shift 1 ;;
             --install-docker     ) INSTALL_DOCKER=1  ; shift 1 ;;
             -h|--help            ) usage             ; exit  1 ;;
